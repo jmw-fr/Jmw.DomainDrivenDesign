@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>Jmw.DomainDrivenDevelopment.Repositories.EntityFrameworkCore</id>
+    <version>0.0.3</version>
+    <description>
+      EntityFrameworkCore repository implementation
+    </description>
+    <projectUrl>https://put-your-url</projectUrl>
+    <authors>Jean-Marc Weeger</authors>
+    <license type="expression">MIT</license>
+    <tags>DomainDrivenDevelopment DDD EntityFramework</tags>
+  </metadata>
+</package>
