@@ -11,16 +11,22 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netcoreapp2.2\Jmw.DomainDrivenDevelopmentUnitTest.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\netcoreapp2.2\Jmw.DDDUnitTest.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp2.2\Jmw.DomainDrivenDevelopmentUnitTest.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netcoreapp2.2\Jmw.DDDUnitTest.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\xunit.runner.json" Link="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="GitVersionTask" Version="4.0.0">
@@ -44,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Jmw.DomainDrivenDevelopment\Jmw.DDD.csproj" />
+    <ProjectReference Include="..\..\src\Jmw.DDD\Jmw.DDD.csproj" />
   </ItemGroup>
 
 </Project>

@@ -16,11 +16,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		readme.md = readme.md
 		stylecop.json = stylecop.json
 		stylecop.ruleset = stylecop.ruleset
+		xunit.runner.json = xunit.runner.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jmw.DDD.EntityFrameworkCore", "src\Jmw.DDD.Repositories.EntityFrameworkCore\Jmw.DDD.EntityFrameworkCore.csproj", "{2563AAA9-D819-4140-9780-15951194D11E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jmw.DDD.EntityFrameworkCore", "src\Jmw.DDD.Repositories.EntityFrameworkCore\Jmw.DDD.EntityFrameworkCore.csproj", "{2563AAA9-D819-4140-9780-15951194D11E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest", "test\Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest\Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.csproj", "{AA0AB226-ACFE-4E68-B1DD-6FF1341795F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest", "test\Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest\Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.csproj", "{AA0AB226-ACFE-4E68-B1DD-6FF1341795F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

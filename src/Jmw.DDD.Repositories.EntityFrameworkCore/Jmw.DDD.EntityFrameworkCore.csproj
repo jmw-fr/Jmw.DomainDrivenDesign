@@ -6,13 +6,13 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netstandard2.0\Jmw.DomainDrivenDevelopment.Repositories.EntityFrameworkCore.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\netstandard2.0\Jmw.DDD.Repositories.EntityFrameworkCore.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard2.0\Jmw.DomainDrivenDevelopment.Repositories.EntityFrameworkCore.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netstandard2.0\Jmw.DDD.Repositories.EntityFrameworkCore.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>
@@ -33,7 +33,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\Jmw.DomainDrivenDevelopment\Jmw.DDD.csproj" />
+    <ProjectReference Include="..\Jmw.DDD\Jmw.DDD.csproj" />
   </ItemGroup>
 
 </Project>

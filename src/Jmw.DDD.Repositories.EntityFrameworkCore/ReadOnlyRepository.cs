@@ -12,7 +12,6 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
     using Jmw.DDD.Domain.Repositories;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata;
-    using Microsoft.EntityFrameworkCore.Storage;
     using NLog;
 
     /// <summary>
