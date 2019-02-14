@@ -18,7 +18,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
     /// <typeparam name="TData">Repository entity data type.</typeparam>
     /// <typeparam name="TKey">Repository key type.</typeparam>
     /// <typeparam name="TOrderBy">Order by property type.</typeparam>
-    public class TransactionalRepository<TContext, TData, TKey, TOrderBy> :
+    public abstract class TransactionalRepository<TContext, TData, TKey, TOrderBy> :
         Repository<TContext, TData, TKey, TOrderBy>,
         ITransactionalRepository<TData, TKey>
         where TContext : DbContext
@@ -57,7 +57,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
                     await Context.Database.ExecuteSqlCommandAsync(sql);
                 }
 
-                throw new InvalidOperationException("exclusive lock is not implemented with this driver.");
+                throw new InvalidOperationException("Exclusive lock is not implemented with this driver.");
             }
         }
 

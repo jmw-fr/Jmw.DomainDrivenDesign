@@ -2,14 +2,13 @@
 <package>
   <metadata>
     <id>Jmw.DDD</id>
-    <version>0.0.2</version>
+    <version>1.0.0</version>
     <description>
       This library creates some abstractions (mainly interfaces) for Domain Driven Development, 
       avoiding code duplications. 
     </description>
-    <projectUrl>https://put-your-url</projectUrl>
+    <projectUrl>https://github.com/jmw-fr/Jmw.DomainDrivenDesign</projectUrl>
     <authors>Jean-Marc Weeger</authors>
     <license type="expression">MIT</license>
-    <tags>ddd DDD</tags>
   </metadata>
 </package>

@@ -5,6 +5,9 @@
 namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq.Expressions;
+    using AutoFixture;
     using Jmw.DDD.Repositories.EntityFrameworkCore;
     using Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common;
     using Xunit;
@@ -22,14 +25,39 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         public void Constructor_Must_ThrowExceptions()
         {
             // Arrange
-            Action sut1 = () => new TransactionalRepositoryFixture(new DbContextFixture(), null);
-            Action sut2 = () => new TransactionalRepositoryFixture(null, c => c.TestData);
+            Action sut1 = () => new TransactionalRepositoryFixture(new DbContextFixture(), null, null, null);
+            Action sut2 = () => new TransactionalRepositoryFixture(null, c => c.TestData, null, null);
+            Action sut3 = () => new TransactionalRepositoryFixture(new DbContextFixture(), c => null, null, null);
 
             // Act
 
             // Assert
             Assert.Throws<ArgumentNullException>(sut1);
             Assert.Throws<ArgumentNullException>(sut2);
+            Assert.Throws<InvalidOperationException>(sut3);
+        }
+
+        /// <summary>
+        /// Checks that the constructor correctly assign properties.
+        /// </summary>
+        [Fact]
+        [Trait("Repositories", "TransactionalRepository")]
+        public void Constructor_MustSet_Properties()
+        {
+            // Arrange
+            var fixture = new Fixture();
+            var dbContext = new DbContextFixture();
+            Expression<Func<TestDataFixture, string>> orderBySelector = o => o.Id;
+            var includes = fixture.Create<IEnumerable<string>>();
+
+            // Act
+            var sut = new TransactionalRepositoryFixture(dbContext, c => c.TestData, orderBySelector, includes);
+
+            // Assert
+            Assert.Equal(dbContext, sut.Context);
+            Assert.Equal(dbContext.TestData, sut.DbSet);
+            Assert.Equal(orderBySelector, sut.OrderBySelector);
+            Assert.Equal(includes, sut.Includes);
         }
     }
 }

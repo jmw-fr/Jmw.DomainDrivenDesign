@@ -4,6 +4,7 @@
 
 namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
 {
+    using System;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
@@ -15,5 +16,16 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
         /// Gets or sets the test data DbSet.
         /// </summary>
         public DbSet<TestDataFixture> TestData { get; set; }
+
+        /// <summary>
+        /// Gets the database name.
+        /// </summary>
+        public string DatabaseName { get; } = Guid.NewGuid().ToString();
+
+        /// <inheritdoc />
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString());
+        }
     }
 }

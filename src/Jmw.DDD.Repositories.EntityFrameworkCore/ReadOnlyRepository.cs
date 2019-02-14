@@ -21,7 +21,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
     /// <typeparam name="TData">Repository entity data type.</typeparam>
     /// <typeparam name="TKey">Repository key type.</typeparam>
     /// <typeparam name="TOrderBy">Order by property type.</typeparam>
-    public class ReadOnlyRepository<TContext, TData, TKey, TOrderBy> :
+    public abstract class ReadOnlyRepository<TContext, TData, TKey, TOrderBy> :
         IReadOnlyRepository<TData, TKey>
         where TContext : DbContext
         where TData : class
@@ -60,32 +60,32 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         /// <summary>
         /// Gets the instance of the EntityFramework context.
         /// </summary>
-        protected TContext Context { get; }
+        protected internal TContext Context { get; }
 
         /// <summary>
         /// Gets the instance of the DbSet.
         /// </summary>
-        protected DbSet<TData> DbSet { get; }
+        protected internal DbSet<TData> DbSet { get; }
 
         /// <summary>
         /// Gets the order by property selector.
         /// </summary>
-        protected Expression<Func<TData, TOrderBy>> OrderBySelector { get; }
+        protected internal Expression<Func<TData, TOrderBy>> OrderBySelector { get; }
 
         /// <summary>
         /// Gets the properties to get while selecting data.
         /// </summary>
-        protected IEnumerable<string> Includes { get; }
+        protected internal IEnumerable<string> Includes { get; }
 
         /// <summary>
         /// Gets the database entity schema.
         /// </summary>
-        protected string Schema { get; }
+        protected internal string Schema { get; }
 
         /// <summary>
         /// Gets the database entity table name.
         /// </summary>
-        protected string TableName { get; }
+        protected internal string TableName { get; }
 
         /// <inheritdoc />
         public async Task<long> CountAsync(Expression<Func<TData, bool>> predicate)
@@ -142,6 +142,11 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         /// <inheritdoc/>
         public async Task<IEnumerable<TData>> QueryAsync(Expression<Func<TData, bool>> predicate, long skip, long take, bool lastFirst)
         {
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate), "Use AnyAsync instead.");
+            }
+
             return await Task.FromResult(PrepareQuery(predicate, skip, take, lastFirst).AsEnumerable());
         }
 

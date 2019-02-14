@@ -1,19 +1,19 @@
-# C# Class Library Template
+# Domain Driven Design .Net Library
 
-This template creates a new project with the following elements :
+This library helps DDD implementation by defining interfaces and abstract classes for Repositories.
 
-- src / test directories,
-- a class library in netstandard 2.0,
-- xUnit test project,
-- StyleCop nuget package,
-- GitVersionTask package.
+# Code coverage
 
-## StyleCop
+Code coverage uses coverlet (https://github.com/tonerdo/coverlet) for code coverage and reportgenerator (https://github.com/danielpalme/ReportGenerator)
+to generate the report.
 
-StyleCop is used for source code quality. StyleCop is configured with the stylecop.json and stylecop.ruleset files. Both are incluced in the `Jmw.ddd` and `Jmw.dddUnitTest` projects.
+To generate code coverage :
+``` powershell
+dotnet test Jmw.DomainDrivenDesign.sln --configuration Release --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Exclude="[xunit*]*%2c[*]GitVersionInformation"
+```
 
-## GitVersionTask
+To generate report :
+``` powershell
+dotnet $env:userprofile\.nuget\packages\reportgenerator\4.0.8\tools\netcoreapp2.0\ReportGenerator.dll "-reports:$pwd\**\coverage.cobertura.xml" "-targetdir:$pwd/coveragereport" "-reporttypes:Cobertura;HtmlInline_AzurePipelines"
+```
 
-GitversionTask is used to automate the versioning of the class library.
-
-You must create the project with Git and an initial commit otherwise you might experience an error when compiling.

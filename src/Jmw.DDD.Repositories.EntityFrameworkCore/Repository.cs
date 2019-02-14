@@ -19,7 +19,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
     /// <typeparam name="TData">Repository entity data type.</typeparam>
     /// <typeparam name="TKey">Repository key type.</typeparam>
     /// <typeparam name="TOrderBy">Order by property type.</typeparam>
-    public class Repository<TContext, TData, TKey, TOrderBy> :
+    public abstract class Repository<TContext, TData, TKey, TOrderBy> :
         ReadOnlyRepository<TContext, TData, TKey, TOrderBy>,
         IRepository<TData, TKey>
         where TContext : DbContext
