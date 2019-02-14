@@ -1,15 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata>
-    <id>Jmw.DomainDrivenDevelopment</id>
-    <version>0.0.2</version>
+    <id>Jmw.DDD.Repositories.EntityFrameworkCore</id>
+    <version>0.0.3</version>
     <description>
-      This library creates some abstractions (mainly interfaces) for Domain Driven Development, 
-      avoiding code duplications. 
+      EntityFrameworkCore repository implementation
     </description>
     <projectUrl>https://put-your-url</projectUrl>
     <authors>Jean-Marc Weeger</authors>
     <license type="expression">MIT</license>
-    <tags>DomainDrivenDevelopment DDD</tags>
+    <tags>DDD EntityFramework</tags>
   </metadata>
 </package>

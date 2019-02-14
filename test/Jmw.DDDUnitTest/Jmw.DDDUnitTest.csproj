@@ -40,11 +40,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Jmw.DomainDrivenDevelopment\Jmw.DomainDrivenDevelopment.csproj" />
+    <Folder Include="Domain\Repositories\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\Repositories\" />
+    <ProjectReference Include="..\..\src\Jmw.DomainDrivenDevelopment\Jmw.DDD.csproj" />
   </ItemGroup>
 
 </Project>

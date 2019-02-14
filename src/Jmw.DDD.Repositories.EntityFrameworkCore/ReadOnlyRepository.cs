@@ -2,14 +2,14 @@
 // Copyright My Company under MIT Licence. See https://opensource.org/licenses/mit-license.php.
 // </copyright>
 
-namespace Jmw.DomainDrivenDevelopment.Repositories.EntityFrameworkCore
+namespace Jmw.DDD.Repositories.EntityFrameworkCore
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using Jmw.DomainDrivenDevelopment.Domain.Repositories;
+    using Jmw.DDD.Domain.Repositories;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata;
     using Microsoft.EntityFrameworkCore.Storage;

@@ -2,7 +2,7 @@
 // Copyright My Company under MIT Licence. See https://opensource.org/licenses/mit-license.php.
 // </copyright>
 
-namespace Jmw.DomainDrivenDevelopment.Domain.Repositories
+namespace Jmw.DDD.Domain.Repositories
 {
     using System;
     using System.Threading.Tasks;

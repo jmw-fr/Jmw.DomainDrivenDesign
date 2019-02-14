@@ -10,7 +10,7 @@ This template creates a new project with the following elements :
 
 ## StyleCop
 
-StyleCop is used for source code quality. StyleCop is configured with the stylecop.json and stylecop.ruleset files. Both are incluced in the `Jmw.DomainDrivenDevelopment` and `Jmw.DomainDrivenDevelopmentUnitTest` projects.
+StyleCop is used for source code quality. StyleCop is configured with the stylecop.json and stylecop.ruleset files. Both are incluced in the `Jmw.ddd` and `Jmw.dddUnitTest` projects.
 
 ## GitVersionTask
 

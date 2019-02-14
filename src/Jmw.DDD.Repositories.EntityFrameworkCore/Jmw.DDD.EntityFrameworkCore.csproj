@@ -33,7 +33,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\Jmw.DomainDrivenDevelopment\Jmw.DomainDrivenDevelopment.csproj" />
+    <ProjectReference Include="..\Jmw.DomainDrivenDevelopment\Jmw.DDD.csproj" />
   </ItemGroup>
 
 </Project>
