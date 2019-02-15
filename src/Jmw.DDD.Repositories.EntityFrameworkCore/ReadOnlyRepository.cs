@@ -39,7 +39,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
             TContext context,
             Func<TContext, DbSet<TData>> propertySelector,
             Expression<Func<TData, TOrderBy>> orderBySelector = null,
-            IEnumerable<string> includes = null)
+            params Expression<Func<TData, object>>[] includes)
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));
 
@@ -50,7 +50,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
 
             DbSet = propertySelector(Context) ?? throw new InvalidOperationException("propertySelector returned null. Expected a non null property.");
             OrderBySelector = orderBySelector;
-            Includes = includes ?? new string[0];
+            
+            // ToList() is important to ensure  the enumeration is done in constructor.
+            Includes = includes.Select(e => GetPropertyName(e)).ToList();
 
             IRelationalEntityTypeAnnotations mapping = context.Model.FindEntityType(typeof(TData).FullName).Relational();
             Schema = mapping.Schema;
@@ -109,9 +111,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
 
             TData entity = await DbSet.FindAsync(key);
 
-            if (entity != null)
+            if (entity != null && Includes != null)
             {
-                foreach (string include in Includes)
+                foreach (var include in Includes)
                 {
                     var reference = Context.Entry(entity).References.Where(r => r.Metadata.Name == include).FirstOrDefault();
 
@@ -169,6 +171,19 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
             return await Task.FromResult(PrepareQuery(predicate, skip, take, lastFirst).AsEnumerable());
         }
 
+        private static string GetPropertyName(Expression<Func<TData, object>> propertyLambda)
+        {
+            MemberExpression memberExpression = propertyLambda.Body as MemberExpression;
+            if (memberExpression == null)
+            {
+                throw new ArgumentException(string.Format(
+                    "Expression '{0}' refers to a method, not a property.",
+                    propertyLambda.ToString()));
+            }
+
+            return memberExpression.Member.Name;
+        }
+
         private IQueryable<TData> PrepareQuery(Expression<Func<TData, bool>> predicate, long skip, long take, bool lastFirst)
         {
             // Entity Framework supports only int only until now.
@@ -185,9 +200,12 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
 
             IQueryable<TData> query = DbSet.AsNoTracking();
 
-            foreach (string include in Includes)
+            if (Includes != null)
             {
-                query = query.Include(include);
+                foreach (string include in Includes)
+                {
+                    query = query.Include(include);
+                }
             }
 
             if (predicate != null)

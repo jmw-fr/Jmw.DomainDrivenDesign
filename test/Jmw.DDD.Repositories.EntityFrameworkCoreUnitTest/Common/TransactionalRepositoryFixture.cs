@@ -36,7 +36,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
             DbContextFixture dbContext,
             Func<DbContextFixture, DbSet<TestDataFixture>> propertySelector,
             Expression<Func<TestDataFixture, string>> orderBySelector,
-            IEnumerable<string> includes)
+            params Expression<Func<TestDataFixture, object>>[] includes)
             : base(dbContext, propertySelector, orderBySelector, includes)
         {
         }

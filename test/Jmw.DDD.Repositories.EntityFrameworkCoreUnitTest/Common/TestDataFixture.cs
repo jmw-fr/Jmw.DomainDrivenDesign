@@ -4,6 +4,7 @@
 
 namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
 
     /// <summary>
@@ -13,8 +14,18 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
     public class TestDataFixture
     {
         /// <summary>
-        /// Gets the data Id.
+        /// Gets or sets gets the data Id.
         /// </summary>
-        public string Id { get; internal set; }
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets gets a collection of data.
+        /// </summary>
+        public IList<TestDataChildFixture> Collection { get; set; }
+
+        /// <summary>
+        /// Gets or sets gets a data by reference.
+        /// </summary>
+        public TestDataChildFixture Reference { get; set; }
     }
 }

@@ -35,7 +35,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
             TContext context,
             Func<TContext, DbSet<TData>> propertySelector,
             Expression<Func<TData, TOrderBy>> orderBySelector = null,
-            IEnumerable<string> includes = null)
+            params Expression<Func<TData, object>>[] includes)
             : base(context, propertySelector, orderBySelector, includes)
         {
         }

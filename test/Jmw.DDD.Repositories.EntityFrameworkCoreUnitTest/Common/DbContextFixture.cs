@@ -18,6 +18,11 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
         public DbSet<TestDataFixture> TestData { get; set; }
 
         /// <summary>
+        /// Gets or sets the test data child DbSet.
+        /// </summary>
+        public DbSet<TestDataChildFixture> TestDataChild { get; set; }
+
+        /// <summary>
         /// Gets the database name.
         /// </summary>
         public string DatabaseName { get; } = Guid.NewGuid().ToString();

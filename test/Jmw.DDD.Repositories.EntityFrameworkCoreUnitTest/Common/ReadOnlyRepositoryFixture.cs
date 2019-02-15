@@ -6,6 +6,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
     using AutoFixture;
     using Jmw.DDD.Repositories.EntityFrameworkCore;
@@ -21,8 +22,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
         /// <summary>
         /// Initializes a new instance of the <see cref="ReadOnlyRepositoryFixture"/> class.
         /// </summary>
-        public ReadOnlyRepositoryFixture()
-            : base(new DbContextFixture(), p => p.TestData, o => o.Id, null)
+        /// <param name="includes">Indicates if we must include collections and references when querying entities.</param>
+        public ReadOnlyRepositoryFixture(bool includes = false)
+            : base(new DbContextFixture(), p => p.TestData, o => o.Id, p => p.Collection, p => p.Reference)
         {
             Seed();
         }
@@ -38,7 +40,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
             DbContextFixture dbContext,
             Func<DbContextFixture, DbSet<TestDataFixture>> propertySelector,
             Expression<Func<TestDataFixture, string>> orderBySelector,
-            IEnumerable<string> includes)
+            params Expression<Func<TestDataFixture, object>>[] includes)
             : base(dbContext, propertySelector, orderBySelector, includes)
         {
         }
@@ -49,8 +51,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
         private void Seed()
         {
             var fixture = new Fixture();
+            var testData = fixture.Create<IEnumerable<TestDataFixture>>();
 
-            this.DbSet.AddRange(fixture.Create<IEnumerable<TestDataFixture>>());
+            this.Context.AddRange(testData);
 
             this.Context.SaveChanges();
         }

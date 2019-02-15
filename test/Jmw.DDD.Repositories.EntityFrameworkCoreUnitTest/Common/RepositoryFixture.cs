@@ -21,7 +21,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
         /// Initializes a new instance of the <see cref="RepositoryFixture"/> class.
         /// </summary>
         public RepositoryFixture()
-            : base(new DbContextFixture(), p => p.TestData, o => o.Id, null)
+            : base(new DbContextFixture(), p => p.TestData, o => o.Id, p => p.Collection, p => p.Reference)
         {
         }
 
@@ -36,7 +36,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
             DbContextFixture dbContext,
             Func<DbContextFixture, DbSet<TestDataFixture>> propertySelector,
             Expression<Func<TestDataFixture, string>> orderBySelector,
-            IEnumerable<string> includes)
+            params Expression<Func<TestDataFixture, object>>[] includes)
             : base(dbContext, propertySelector, orderBySelector, includes)
         {
         }

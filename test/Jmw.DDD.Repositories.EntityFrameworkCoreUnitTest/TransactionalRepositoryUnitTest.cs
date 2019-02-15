@@ -48,16 +48,18 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             var fixture = new Fixture();
             var dbContext = new DbContextFixture();
             Expression<Func<TestDataFixture, string>> orderBySelector = o => o.Id;
-            var includes = fixture.Create<IEnumerable<string>>();
 
             // Act
-            var sut = new TransactionalRepositoryFixture(dbContext, c => c.TestData, orderBySelector, includes);
+            var sut = new TransactionalRepositoryFixture(dbContext, c => c.TestData, orderBySelector, p => p.Collection, p => p.Reference);
 
             // Assert
             Assert.Equal(dbContext, sut.Context);
             Assert.Equal(dbContext.TestData, sut.DbSet);
             Assert.Equal(orderBySelector, sut.OrderBySelector);
-            Assert.Equal(includes, sut.Includes);
+            Assert.Collection(
+                sut.Includes,
+                (s) => Assert.Equal(nameof(TestDataFixture.Collection), s),
+                (s) => Assert.Equal(nameof(TestDataFixture.Reference), s));
         }
     }
 }

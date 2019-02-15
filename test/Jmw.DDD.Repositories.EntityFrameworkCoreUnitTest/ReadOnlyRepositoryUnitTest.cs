@@ -26,9 +26,10 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         public void Constructor_Must_ThrowExceptions()
         {
             // Arrange
-            Action sut1 = () => new ReadOnlyRepositoryFixture(new DbContextFixture(), null, null, null);
-            Action sut2 = () => new ReadOnlyRepositoryFixture(null, c => c.TestData, null, null);
-            Action sut3 = () => new ReadOnlyRepositoryFixture(new DbContextFixture(), c => null, null, null);
+            Action sut1 = () => new ReadOnlyRepositoryFixture(new DbContextFixture(), null, null);
+            Action sut2 = () => new ReadOnlyRepositoryFixture(null, c => c.TestData, null);
+            Action sut3 = () => new ReadOnlyRepositoryFixture(new DbContextFixture(), c => null, null);
+            Action sut4 = () => new ReadOnlyRepositoryFixture(new DbContextFixture(), c => c.TestData, null, c => new object());
 
             // Act
 
@@ -36,6 +37,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             Assert.Throws<ArgumentNullException>(sut1);
             Assert.Throws<ArgumentNullException>(sut2);
             Assert.Throws<InvalidOperationException>(sut3);
+            Assert.Throws<ArgumentException>(sut4);
         }
 
         /// <summary>
@@ -49,16 +51,18 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             var fixture = new Fixture();
             var dbContext = new DbContextFixture();
             Expression<Func<TestDataFixture, string>> orderBySelector = o => o.Id;
-            var includes = fixture.Create<IEnumerable<string>>();
 
             // Act
-            var sut = new ReadOnlyRepositoryFixture(dbContext, c => c.TestData, orderBySelector, includes);
+            var sut = new ReadOnlyRepositoryFixture(dbContext, c => c.TestData, orderBySelector, p => p.Collection, p => p.Reference);
 
             // Assert
             Assert.Equal(dbContext, sut.Context);
             Assert.Equal(dbContext.TestData, sut.DbSet);
             Assert.Equal(orderBySelector, sut.OrderBySelector);
-            Assert.Equal(includes, sut.Includes);
+            Assert.Collection(
+                sut.Includes,
+                (s) => Assert.Equal(nameof(TestDataFixture.Collection), s),
+                (s) => Assert.Equal(nameof(TestDataFixture.Reference), s));
             Assert.Null(sut.Schema); // Assert.Equal("Schema", sut.Schema); // Can't test schema with InMemory now.
             Assert.Equal(nameof(TestDataFixture), sut.TableName);
         }
@@ -138,6 +142,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             // Assert
             Assert.NotNull(computed.Id);
             Assert.Equal(entity.Id, computed.Id);
+            Assert.NotNull(computed.Reference);
+            Assert.NotNull(computed.Collection);
+            Assert.NotEmpty(computed.Collection);
         }
 
         /// <summary>
