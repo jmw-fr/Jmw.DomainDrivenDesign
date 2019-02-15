@@ -6,6 +6,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
     using AutoFixture;
     using Jmw.DDD.Repositories.EntityFrameworkCore;
@@ -58,6 +59,8 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             Assert.Equal(dbContext.TestData, sut.DbSet);
             Assert.Equal(orderBySelector, sut.OrderBySelector);
             Assert.Equal(includes, sut.Includes);
+            Assert.Null(sut.Schema); // Assert.Equal("Schema", sut.Schema); // Can't test schema with InMemory now.
+            Assert.Equal(nameof(TestDataFixture), sut.TableName);
         }
 
         /// <summary>
@@ -95,6 +98,149 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             // Assert
             await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await repository.AnyAsync(-1, 100, false));
             await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await repository.AnyAsync(0, -1, false));
+        }
+
+        /// <summary>
+        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.CountAsync"/>
+        /// returns the correct Count.
+        /// </summary>
+        [Fact]
+        [Trait("Repositories", "ReadOnlyRepository")]
+        public async void CountAsync_MustReturn_Count()
+        {
+            // Arrange
+            var sut = new ReadOnlyRepositoryFixture();
+
+            // Act
+            var computed = await sut.CountAsync();
+            var computed2 = await sut.CountAsync(e => false);
+
+            // Assert
+            Assert.Equal(sut.DbSet.Count(), computed);
+            Assert.Equal(0, computed2);
+        }
+
+        /// <summary>
+        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.FindAsync"/>
+        /// returns the correct entity.
+        /// </summary>
+        [Fact]
+        [Trait("Repositories", "ReadOnlyRepository")]
+        public async void FindAsync_MustReturn_Entity()
+        {
+            // Arrange
+            var sut = new ReadOnlyRepositoryFixture();
+            var entity = sut.DbSet.Last();
+
+            // Act
+            var computed = await sut.FindAsync(entity.Id);
+
+            // Assert
+            Assert.NotNull(computed.Id);
+            Assert.Equal(entity.Id, computed.Id);
+        }
+
+        /// <summary>
+        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.FirstAsync"/>
+        /// returns the correct entity.
+        /// </summary>
+        [Fact]
+        [Trait("Repositories", "ReadOnlyRepository")]
+        public async void FirstAsync_MustReturn_Entity()
+        {
+            // Arrange
+            var sut = new ReadOnlyRepositoryFixture();
+            var firstEntity = sut.DbSet.OrderBy(e => e.Id).First();
+
+            // Act
+            var computed = await sut.FirstAsync();
+            var computed2 = await sut.FirstAsync(e => e.Id != firstEntity.Id);
+
+            // Assert
+            Assert.Equal(firstEntity.Id, computed.Id);
+            Assert.NotNull(computed2);
+            Assert.NotEqual(firstEntity.Id, computed2.Id);
+        }
+
+        /// <summary>
+        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.LastAsync"/>
+        /// returns the correct entity.
+        /// </summary>
+        [Fact]
+        [Trait("Repositories", "ReadOnlyRepository")]
+        public async void LastAsync_MustReturn_Entity()
+        {
+            // Arrange
+            var sut = new ReadOnlyRepositoryFixture();
+            var lastEntity = sut.DbSet.OrderBy(e => e.Id).Last();
+
+            // Act
+            var computed = await sut.LastAsync();
+            var computed2 = await sut.LastAsync(e => e.Id != lastEntity.Id);
+
+            // Assert
+            Assert.Equal(lastEntity.Id, computed.Id);
+            Assert.NotNull(computed2);
+            Assert.NotEqual(lastEntity.Id, computed2.Id);
+        }
+
+        /// <summary>
+        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.AnyAsync"/>
+        /// returns the correct entities.
+        /// </summary>
+        [Fact]
+        [Trait("Repositories", "ReadOnlyRepository")]
+        public async void AnyAsync_MustReturn_Entity()
+        {
+            // Arrange
+            var sut = new ReadOnlyRepositoryFixture();
+            var enumerator = sut.DbSet.OrderBy(e => e.Id).GetEnumerator();
+            var last = sut.DbSet.OrderByDescending(e => e.Id).First();
+
+            // Act
+            var computed = await sut.AnyAsync(0, int.MaxValue, false);
+            var computed2 = await sut.AnyAsync(0, 1, true);
+
+            // Assert
+            Assert.Equal(sut.DbSet.Count(), computed.Count());
+            Assert.All(computed, c =>
+            {
+                enumerator.MoveNext();
+                Assert.Equal(enumerator.Current.Id, c.Id);
+            });
+
+            Assert.Single(computed2);
+            Assert.Equal(last.Id, computed2.First().Id);
+        }
+
+        /// <summary>
+        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.QueryAsync"/>
+        /// returns the correct entities.
+        /// </summary>
+        [Fact]
+        [Trait("Repositories", "ReadOnlyRepository")]
+        public async void QueryAsync_MustReturn_Entity()
+        {
+            // Arrange
+            var sut = new ReadOnlyRepositoryFixture();
+            var entite = sut.DbSet.First();
+            var entities = sut.DbSet.Where(e => e.Id != entite.Id).OrderBy(e => e.Id);
+            var enumerator = entities.GetEnumerator();
+
+            // Act
+            var computed = await sut.QueryAsync(e => e.Id != entite.Id, 0, int.MaxValue, false);
+            var computed2 = await sut.QueryAsync(e => e.Id == entite.Id, 0, 1, true);
+
+            // Assert
+            Assert.Equal(entities.Count(), computed.Count());
+            Assert.All(computed, c =>
+            {
+                enumerator.MoveNext();
+                Assert.Equal(enumerator.Current.Id, c.Id);
+            });
+
+            Assert.Single(computed2);
+            Assert.Equal(entite.Id, computed2.First().Id);
         }
     }
 }

@@ -88,14 +88,25 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         protected internal string TableName { get; }
 
         /// <inheritdoc />
-        public async Task<long> CountAsync(Expression<Func<TData, bool>> predicate)
+        public async Task<long> CountAsync(Expression<Func<TData, bool>> predicate = null)
         {
-            return await DbSet.LongCountAsync(predicate);
+            Logger.Debug("ReadOnlyRepository::CountAsync");
+
+            if (predicate is null)
+            {
+                return await DbSet.LongCountAsync();
+            }
+            else
+            {
+                return await DbSet.LongCountAsync(predicate);
+            }
         }
 
         /// <inheritdoc/>
         public async Task<TData> FindAsync(TKey key)
         {
+            Logger.Debug("ReadOnlyRepository::FindAsync");
+
             TData entity = await DbSet.FindAsync(key);
 
             if (entity != null)
@@ -122,26 +133,34 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         }
 
         /// <inheritdoc/>
-        public async Task<TData> FirstAsync(Expression<Func<TData, bool>> predicate)
+        public async Task<TData> FirstAsync(Expression<Func<TData, bool>> predicate = null)
         {
+            Logger.Debug("ReadOnlyRepository::FirstAsync");
+
             return await PrepareQuery(predicate, 0, 1, false).FirstOrDefaultAsync();
+        }
+
+        /// <inheritdoc/>
+        public async Task<TData> LastAsync(Expression<Func<TData, bool>> predicate = null)
+        {
+            Logger.Debug("ReadOnlyRepository::LastAsync");
+
+            return await PrepareQuery(predicate, 0, 1, true).FirstOrDefaultAsync();
         }
 
         /// <inheritdoc/>
         public async Task<IEnumerable<TData>> AnyAsync(long skip, long take, bool lastFirst)
         {
-            return await Task.FromResult(PrepareQuery(null, skip, take, lastFirst).AsEnumerable());
-        }
+            Logger.Debug("ReadOnlyRepository::AnyAsync");
 
-        /// <inheritdoc/>
-        public async Task<TData> LastAsync(Expression<Func<TData, bool>> predicate)
-        {
-            return await PrepareQuery(predicate, 0, 1, false).LastOrDefaultAsync();
+            return await Task.FromResult(PrepareQuery(null, skip, take, lastFirst).AsEnumerable());
         }
 
         /// <inheritdoc/>
         public async Task<IEnumerable<TData>> QueryAsync(Expression<Func<TData, bool>> predicate, long skip, long take, bool lastFirst)
         {
+            Logger.Debug("ReadOnlyRepository::QueryAsync");
+
             if (predicate == null)
             {
                 throw new ArgumentNullException(nameof(predicate), "Use AnyAsync instead.");
@@ -152,12 +171,14 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
 
         private IQueryable<TData> PrepareQuery(Expression<Func<TData, bool>> predicate, long skip, long take, bool lastFirst)
         {
-            if (skip < 0)
+            // Entity Framework supports only int only until now.
+            if (skip < 0 || skip > int.MaxValue)
             {
                 throw new ArgumentOutOfRangeException(nameof(skip));
             }
 
-            if (take < 0)
+            // Entity Framework supports only int only until now.
+            if (take < 0 || take > int.MaxValue)
             {
                 throw new ArgumentOutOfRangeException(nameof(take));
             }

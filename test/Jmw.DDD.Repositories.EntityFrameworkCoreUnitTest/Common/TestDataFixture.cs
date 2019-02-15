@@ -4,9 +4,12 @@
 
 namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
 {
+    using System.ComponentModel.DataAnnotations.Schema;
+
     /// <summary>
     /// Test data fixture.
     /// </summary>
+    [Table(nameof(TestDataFixture), Schema = "Schema")]
     public class TestDataFixture
     {
         /// <summary>

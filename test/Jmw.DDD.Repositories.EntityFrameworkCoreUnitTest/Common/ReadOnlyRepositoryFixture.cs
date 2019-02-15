@@ -7,6 +7,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
+    using AutoFixture;
     using Jmw.DDD.Repositories.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +24,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
         public ReadOnlyRepositoryFixture()
             : base(new DbContextFixture(), p => p.TestData, o => o.Id, null)
         {
+            Seed();
         }
 
         /// <summary>
@@ -39,6 +41,18 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
             IEnumerable<string> includes)
             : base(dbContext, propertySelector, orderBySelector, includes)
         {
+        }
+
+        /// <summary>
+        /// Adds some sample data.
+        /// </summary>
+        private void Seed()
+        {
+            var fixture = new Fixture();
+
+            this.DbSet.AddRange(fixture.Create<IEnumerable<TestDataFixture>>());
+
+            this.Context.SaveChanges();
         }
     }
 }
