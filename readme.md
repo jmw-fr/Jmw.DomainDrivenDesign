@@ -17,3 +17,7 @@ To generate report :
 dotnet $env:userprofile\.nuget\packages\reportgenerator\4.0.8\tools\netcoreapp2.0\ReportGenerator.dll "-reports:$pwd\**\coverage.cobertura.xml" "-targetdir:$pwd/coveragereport" "-reporttypes:Cobertura;HtmlInline_AzurePipelines"
 ```
 
+``` bash
+dotnet "~/.nuget/packages/reportgenerator/4.0.8/tools/netcoreapp2.0/ReportGenerator.dll" "-reports:$pwd/**/coverage.cobertura.xml" "-targetdir:$pwd/coveragereport" "-reporttypes:Cobertura;HtmlInline_AzurePipelines"
+```
+
