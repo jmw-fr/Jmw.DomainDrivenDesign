@@ -50,7 +50,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
 
             DbSet = propertySelector(Context) ?? throw new InvalidOperationException("propertySelector returned null. Expected a non null property.");
             OrderBySelector = orderBySelector;
-            
+
             // ToList() is important to ensure  the enumeration is done in constructor.
             Includes = includes.Select(e => GetPropertyName(e)).ToList();
 
