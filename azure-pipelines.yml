@@ -29,27 +29,3 @@ steps:
 - script: dotnet test Jmw.DomainDrivenDesign.sln --configuration Release --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Exclude="[xunit*]*%2c[*]GitVersionInformation"
   displayName: 'dotnet test $(buildConfiguration)'
 
-- script: 'dotnet $(UserProfile)\.nuget\packages\reportgenerator\4.0.8\tools\netcoreapp2.0\ReportGenerator.dll "-reports:$(build.artifactstagingdirectory)/TestResults/Coverage/coverage.cobertura.xml" "-targetdir:$(build.artifactstagingdirectory)/TestResults/Coverage/coveragereport" -reporttypes:HTMLInline'
-  displayName: 'reportgenerator'
-
-- task: PublishTestResults@2
-  displayName: 'Publish Test Results'
-  inputs:
-    testResultsFormat: 'VSTest'
-    testResultsFiles: '$(build.artifactstagingdirectory)/TestResults/*.trx'
-
-- task: PublishCodeCoverageResults@1
-  displayName: 'Publish Code Coverage Results'
-  inputs:
-    codeCoverageTool: 'cobertura'
-    summaryFileLocation: '$(build.artifactstagingdirectory)/TestResults/Coverage/coverage.cobertura.xml'
-    reportDirectory: '$(build.artifactstagingdirectory)/TestResults/Coverage/coveragereport'
-    failIfCoverageEmpty: true
-    
-- task: NuGetCommand@2
-  displayName: 'NuGet pack'
-  inputs:
-    command: pack
-    packagesToPack: src/Cardwizard.Client/Cardwizard.Client.csproj
-    versioningScheme: byEnvVar
-    versionEnvVar: GitVersion.NuGetVersion
