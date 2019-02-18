@@ -5,9 +5,6 @@
 namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Linq.Expressions;
     using AutoFixture;
     using Jmw.DDD.Repositories.EntityFrameworkCore;
     using Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common;
@@ -26,9 +23,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         public void Constructor_Must_ThrowExceptions()
         {
             // Arrange
-            Action sut1 = () => new TransactionalRepositoryFixture(new DbContextFixture(), null, null, null);
-            Action sut2 = () => new TransactionalRepositoryFixture(null, c => c.TestData, null, null);
-            Action sut3 = () => new TransactionalRepositoryFixture(new DbContextFixture(), c => null, null, null);
+            Action sut1 = () => new TransactionalRepositoryFixture(new DbContextFixture(), null);
+            Action sut2 = () => new TransactionalRepositoryFixture(null, c => c.TestData);
+            Action sut3 = () => new TransactionalRepositoryFixture(new DbContextFixture(), c => null);
 
             // Act
 
@@ -48,15 +45,13 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             // Arrange
             var fixture = new Fixture();
             var dbContext = new DbContextFixture();
-            Func<IQueryable<TestDataFixture>, IOrderedQueryable<TestDataFixture>> orderBySelector = o => o.OrderBy(m => m.Id);
 
             // Act
-            var sut = new TransactionalRepositoryFixture(dbContext, c => c.TestData, orderBySelector, p => p.Collection, p => p.Reference);
+            var sut = new TransactionalRepositoryFixture(dbContext, c => c.TestData);
 
             // Assert
             Assert.Equal(dbContext, sut.Context);
             Assert.Equal(dbContext.TestData, sut.DbSet);
-            Assert.Equal(orderBySelector, sut.OrderBySelector);
             Assert.Collection(
                 sut.Includes,
                 (s) => Assert.Equal(nameof(TestDataFixture.Collection), s),

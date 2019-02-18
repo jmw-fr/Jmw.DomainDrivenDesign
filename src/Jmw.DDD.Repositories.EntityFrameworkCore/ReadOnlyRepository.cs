@@ -33,13 +33,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         /// </summary>
         /// <param name="context">EntityFramework context to use.</param>
         /// <param name="propertySelector">Selector of the DbSet property of <paramref name="context"/>.</param>
-        /// <param name="orderBySelector">Selector of <paramref name="propertySelector"/> property used to order by.</param>
-        /// <param name="includes">Referenced properties to include during selection of data.</param>
         public ReadOnlyRepository(
             TContext context,
-            Func<TContext, DbSet<TData>> propertySelector,
-            Func<IQueryable<TData>, IOrderedQueryable<TData>> orderBySelector = null,
-            params Expression<Func<TData, object>>[] includes)
+            Func<TContext, DbSet<TData>> propertySelector)
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));
 
@@ -49,15 +45,21 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
             }
 
             DbSet = propertySelector(Context) ?? throw new InvalidOperationException("propertySelector returned null. Expected a non null property.");
-            OrderBySelector = orderBySelector;
-
-            // ToList() is important to ensure  the enumeration is done in constructor.
-            Includes = includes.Select(e => GetPropertyName(e)).ToList();
 
             IRelationalEntityTypeAnnotations mapping = context.Model.FindEntityType(typeof(TData).FullName).Relational();
             Schema = mapping.Schema;
             TableName = mapping.TableName;
         }
+
+        /// <summary>
+        /// Gets the order by properties.
+        /// </summary>
+        public IEnumerable<Expression<Func<TData, object>>> OrderBy { get; private set; }
+
+        /// <summary>
+        /// Gets the properties to retrieve when selecting data.
+        /// </summary>
+        public IEnumerable<string> Includes { get; private set; }
 
         /// <summary>
         /// Gets the instance of the EntityFramework context.
@@ -68,16 +70,6 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         /// Gets the instance of the DbSet.
         /// </summary>
         protected internal DbSet<TData> DbSet { get; }
-
-        /// <summary>
-        /// Gets the order by property selector.
-        /// </summary>
-        protected internal Func<IQueryable<TData>, IOrderedQueryable<TData>> OrderBySelector { get; }
-
-        /// <summary>
-        /// Gets the properties to get while selecting data.
-        /// </summary>
-        protected internal IEnumerable<string> Includes { get; }
 
         /// <summary>
         /// Gets the database entity schema.
@@ -171,9 +163,28 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
             return await Task.FromResult(PrepareQuery(predicate, skip, take).AsEnumerable());
         }
 
+        /// <summary>
+        /// Sets the order by properties for the repository.
+        /// </summary>
+        /// <param name="orderByProperties">List of properties used for ordering.</param>
+        protected void SetOrderBy(params Expression<Func<TData, object>>[] orderByProperties)
+        {
+            OrderBy = orderByProperties;
+        }
+
+        /// <summary>
+        /// Sets the references or collections to retrieve when selecting data.
+        /// </summary>
+        /// <param name="includesProperties">List of properties to include.</param>
+        protected void SetIncludes(params Expression<Func<TData, object>>[] includesProperties)
+        {
+            Includes = includesProperties.Select(e => GetPropertyName(e)).ToList();
+        }
+
         private static string GetPropertyName(Expression<Func<TData, object>> propertyLambda)
         {
             MemberExpression memberExpression = propertyLambda.Body as MemberExpression;
+
             if (memberExpression == null)
             {
                 throw new ArgumentException(string.Format(
@@ -186,6 +197,8 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
 
         private IQueryable<TData> PrepareQuery(Expression<Func<TData, bool>> predicate, long skip, long take)
         {
+            bool ordered = false;
+
             // Entity Framework supports only int only until now.
             if (skip < 0 || skip > int.MaxValue)
             {
@@ -196,6 +209,11 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
             if (take < 0 || take > int.MaxValue)
             {
                 throw new ArgumentOutOfRangeException(nameof(take));
+            }
+
+            if (OrderBy is null)
+            {
+                throw new InvalidOperationException("Please set entities ordering with SetOrderBy() function first.");
             }
 
             IQueryable<TData> query = DbSet.AsNoTracking();
@@ -213,7 +231,18 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
                 query = query.Where(predicate);
             }
 
-            query = OrderBySelector(query);
+            foreach (var order in OrderBy)
+            {
+                if (ordered)
+                {
+                    query = (query as IOrderedQueryable<TData>).ThenBy(order);
+                }
+                else
+                {
+                    query = query.OrderBy(order);
+                    ordered = true;
+                }
+            }
 
             return query
                 .Skip((int)skip)

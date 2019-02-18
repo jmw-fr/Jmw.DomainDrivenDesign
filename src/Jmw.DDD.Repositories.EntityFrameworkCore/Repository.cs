@@ -5,9 +5,6 @@
 namespace Jmw.DDD.Repositories.EntityFrameworkCore
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Linq.Expressions;
     using System.Threading.Tasks;
     using Jmw.ComponentModel.DataAnnotations;
     using Jmw.DDD.Domain.Repositories;
@@ -31,14 +28,10 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         /// </summary>
         /// <param name="context">EntityFramework context to use.</param>
         /// <param name="propertySelector">Selector of the DbSet property of <paramref name="context"/>.</param>
-        /// <param name="orderBySelector">Selector of <paramref name="propertySelector"/> property used to order by.</param>
-        /// <param name="includes">Referenced properties to include during selection of data.</param>
         public Repository(
             TContext context,
-            Func<TContext, DbSet<TData>> propertySelector,
-            Func<IQueryable<TData>, IOrderedQueryable<TData>> orderBySelector = null,
-            params Expression<Func<TData, object>>[] includes)
-            : base(context, propertySelector, orderBySelector, includes)
+            Func<TContext, DbSet<TData>> propertySelector)
+            : base(context, propertySelector)
         {
         }
 

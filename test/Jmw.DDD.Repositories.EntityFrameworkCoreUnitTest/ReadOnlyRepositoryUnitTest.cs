@@ -5,9 +5,7 @@
 namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Linq.Expressions;
     using AutoFixture;
     using Jmw.DDD.Repositories.EntityFrameworkCore;
     using Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common;
@@ -26,18 +24,14 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         public void Constructor_Must_ThrowExceptions()
         {
             // Arrange
-            Action sut1 = () => new ReadOnlyRepositoryFixture(new DbContextFixture(), null, null);
-            Action sut2 = () => new ReadOnlyRepositoryFixture(null, c => c.TestData, null);
-            Action sut3 = () => new ReadOnlyRepositoryFixture(new DbContextFixture(), c => null, null);
-            Action sut4 = () => new ReadOnlyRepositoryFixture(new DbContextFixture(), c => c.TestData, null, c => new object());
+            Action sut1 = () => new ReadOnlyRepositoryFixture(new DbContextFixture(), null);
+            Action sut2 = () => new ReadOnlyRepositoryFixture(null, c => c.TestData);
 
             // Act
 
             // Assert
             Assert.Throws<ArgumentNullException>(sut1);
             Assert.Throws<ArgumentNullException>(sut2);
-            Assert.Throws<InvalidOperationException>(sut3);
-            Assert.Throws<ArgumentException>(sut4);
         }
 
         /// <summary>
@@ -50,15 +44,13 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             // Arrange
             var fixture = new Fixture();
             var dbContext = new DbContextFixture();
-            Func<IQueryable<TestDataFixture>, IOrderedQueryable<TestDataFixture>> orderBySelector = o => o.OrderBy(m => m.Id);
 
             // Act
-            var sut = new ReadOnlyRepositoryFixture(dbContext, c => c.TestData, orderBySelector, p => p.Collection, p => p.Reference);
+            var sut = new ReadOnlyRepositoryFixture(dbContext, c => c.TestData);
 
             // Assert
             Assert.Equal(dbContext, sut.Context);
             Assert.Equal(dbContext.TestData, sut.DbSet);
-            Assert.Equal(orderBySelector, sut.OrderBySelector);
             Assert.Collection(
                 sut.Includes,
                 (s) => Assert.Equal(nameof(TestDataFixture.Collection), s),
@@ -76,7 +68,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         public async void QueryAsync_MustCheck_Parameters()
         {
             // Arrange
-            var repository = new ReadOnlyRepositoryFixture();
+            var repository = new ReadOnlyRepositoryFixture(false);
 
             // Act
 
@@ -95,7 +87,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         public async void AnyAsync_MustCheck_Parameters()
         {
             // Arrange
-            var repository = new ReadOnlyRepositoryFixture();
+            var repository = new ReadOnlyRepositoryFixture(false);
 
             // Act
 
@@ -108,12 +100,15 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.CountAsync"/>
         /// returns the correct Count.
         /// </summary>
-        [Fact]
+        /// <param name="includeReferences">Includes and check references.</param>
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
         [Trait("Repositories", "ReadOnlyRepository")]
-        public async void CountAsync_MustReturn_Count()
+        public async void CountAsync_MustReturn_Count(bool includeReferences)
         {
             // Arrange
-            var sut = new ReadOnlyRepositoryFixture();
+            var sut = new ReadOnlyRepositoryFixture(includeReferences);
 
             // Act
             var computed = await sut.CountAsync();
@@ -128,12 +123,15 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.FindAsync"/>
         /// returns the correct entity.
         /// </summary>
-        [Fact]
+        /// <param name="includeReferences">Includes and check references.</param>
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
         [Trait("Repositories", "ReadOnlyRepository")]
-        public async void FindAsync_MustReturn_Entity()
+        public async void FindAsync_MustReturn_Entity(bool includeReferences)
         {
             // Arrange
-            var sut = new ReadOnlyRepositoryFixture();
+            var sut = new ReadOnlyRepositoryFixture(includeReferences);
             var entity = sut.DbSet.Last();
 
             // Act
@@ -142,21 +140,28 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             // Assert
             Assert.NotNull(computed.Id);
             Assert.Equal(entity.Id, computed.Id);
-            Assert.NotNull(computed.Reference);
-            Assert.NotNull(computed.Collection);
-            Assert.NotEmpty(computed.Collection);
+
+            if (includeReferences)
+            {
+                Assert.NotNull(computed.Reference);
+                Assert.NotNull(computed.Collection);
+                Assert.NotEmpty(computed.Collection);
+            }
         }
 
         /// <summary>
         /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.FirstAsync"/>
         /// returns the correct entity.
         /// </summary>
-        [Fact]
+        /// <param name="includeReferences">Includes and check references.</param>
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
         [Trait("Repositories", "ReadOnlyRepository")]
-        public async void FirstAsync_MustReturn_Entity()
+        public async void FirstAsync_MustReturn_Entity(bool includeReferences)
         {
             // Arrange
-            var sut = new ReadOnlyRepositoryFixture();
+            var sut = new ReadOnlyRepositoryFixture(includeReferences);
             var firstEntity = sut.DbSet.OrderBy(e => e.Id).First();
 
             // Act
@@ -167,18 +172,28 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             Assert.Equal(firstEntity.Id, computed.Id);
             Assert.NotNull(computed2);
             Assert.NotEqual(firstEntity.Id, computed2.Id);
+
+            if (includeReferences)
+            {
+                Assert.NotNull(computed.Reference);
+                Assert.NotNull(computed.Collection);
+                Assert.NotEmpty(computed.Collection);
+            }
         }
 
         /// <summary>
         /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.LastAsync"/>
         /// returns the correct entity.
         /// </summary>
-        [Fact]
+        /// <param name="includeReferences">Includes and check references.</param>
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
         [Trait("Repositories", "ReadOnlyRepository")]
-        public async void LastAsync_MustReturn_Entity()
+        public async void LastAsync_MustReturn_Entity(bool includeReferences)
         {
             // Arrange
-            var sut = new ReadOnlyRepositoryFixture();
+            var sut = new ReadOnlyRepositoryFixture(includeReferences);
             var lastEntity = sut.DbSet.OrderBy(e => e.Id).Last();
 
             // Act
@@ -189,18 +204,27 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             Assert.Equal(lastEntity.Id, computed.Id);
             Assert.NotNull(computed2);
             Assert.NotEqual(lastEntity.Id, computed2.Id);
+            if (includeReferences)
+            {
+                Assert.NotNull(computed.Reference);
+                Assert.NotNull(computed.Collection);
+                Assert.NotEmpty(computed.Collection);
+            }
         }
 
         /// <summary>
         /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.AnyAsync"/>
         /// returns the correct entities.
         /// </summary>
-        [Fact]
+        /// <param name="includeReferences">Includes and check references.</param>
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
         [Trait("Repositories", "ReadOnlyRepository")]
-        public async void AnyAsync_MustReturn_Entity()
+        public async void AnyAsync_MustReturn_Entity(bool includeReferences)
         {
             // Arrange
-            var sut = new ReadOnlyRepositoryFixture();
+            var sut = new ReadOnlyRepositoryFixture(includeReferences);
             var enumerator = sut.DbSet.OrderBy(e => e.Id).GetEnumerator();
             var last = sut.DbSet.OrderByDescending(e => e.Id).First();
 
@@ -213,6 +237,12 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             {
                 enumerator.MoveNext();
                 Assert.Equal(enumerator.Current.Id, c.Id);
+                if (includeReferences)
+                {
+                    Assert.NotNull(enumerator.Current.Reference);
+                    Assert.NotNull(enumerator.Current.Collection);
+                    Assert.NotEmpty(enumerator.Current.Collection);
+                }
             });
         }
 
@@ -220,12 +250,15 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.QueryAsync"/>
         /// returns the correct entities.
         /// </summary>
-        [Fact]
+        /// <param name="includeReferences">Includes and check references.</param>
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
         [Trait("Repositories", "ReadOnlyRepository")]
-        public async void QueryAsync_MustReturn_Entity()
+        public async void QueryAsync_MustReturn_Entity(bool includeReferences)
         {
             // Arrange
-            var sut = new ReadOnlyRepositoryFixture();
+            var sut = new ReadOnlyRepositoryFixture(includeReferences);
             var entite = sut.DbSet.First();
             var entities = sut.DbSet.Where(e => e.Id != entite.Id).OrderBy(e => e.Id);
             var enumerator = entities.GetEnumerator();
@@ -239,6 +272,12 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             {
                 enumerator.MoveNext();
                 Assert.Equal(enumerator.Current.Id, c.Id);
+                if (includeReferences)
+                {
+                    Assert.NotNull(enumerator.Current.Reference);
+                    Assert.NotNull(enumerator.Current.Collection);
+                    Assert.NotEmpty(enumerator.Current.Collection);
+                }
             });
         }
     }
