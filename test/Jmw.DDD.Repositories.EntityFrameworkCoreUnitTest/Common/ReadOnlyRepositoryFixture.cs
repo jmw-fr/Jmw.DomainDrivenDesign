@@ -24,7 +24,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
         /// </summary>
         /// <param name="includes">Indicates if we must include collections and references when querying entities.</param>
         public ReadOnlyRepositoryFixture(bool includes = false)
-            : base(new DbContextFixture(), p => p.TestData, o => o.Id, p => p.Collection, p => p.Reference)
+            : base(new DbContextFixture(), p => p.TestData, o => o.OrderBy(m => m.Id), p => p.Collection, p => p.Reference)
         {
             Seed();
         }
@@ -39,7 +39,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
         public ReadOnlyRepositoryFixture(
             DbContextFixture dbContext,
             Func<DbContextFixture, DbSet<TestDataFixture>> propertySelector,
-            Expression<Func<TestDataFixture, string>> orderBySelector,
+            Func<IQueryable<TestDataFixture>, IOrderedQueryable<TestDataFixture>> orderBySelector,
             params Expression<Func<TestDataFixture, object>>[] includes)
             : base(dbContext, propertySelector, orderBySelector, includes)
         {

@@ -6,6 +6,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
     using Jmw.ComponentModel.DataAnnotations;
@@ -35,7 +36,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         public Repository(
             TContext context,
             Func<TContext, DbSet<TData>> propertySelector,
-            Expression<Func<TData, TOrderBy>> orderBySelector = null,
+            Func<IQueryable<TData>, IOrderedQueryable<TData>> orderBySelector = null,
             params Expression<Func<TData, object>>[] includes)
             : base(context, propertySelector, orderBySelector, includes)
         {

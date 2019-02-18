@@ -6,6 +6,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
     using Jmw.DDD.Repositories.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,12 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
         /// Initializes a new instance of the <see cref="RepositoryFixture"/> class.
         /// </summary>
         public RepositoryFixture()
-            : base(new DbContextFixture(), p => p.TestData, o => o.Id, p => p.Collection, p => p.Reference)
+            : base(
+                  new DbContextFixture(),
+                  p => p.TestData,
+                  o => o.OrderBy(m => m.Id),
+                  p => p.Collection,
+                  p => p.Reference)
         {
         }
 
@@ -35,7 +41,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
         public RepositoryFixture(
             DbContextFixture dbContext,
             Func<DbContextFixture, DbSet<TestDataFixture>> propertySelector,
-            Expression<Func<TestDataFixture, string>> orderBySelector,
+            Func<IQueryable<TestDataFixture>, IOrderedQueryable<TestDataFixture>> orderBySelector,
             params Expression<Func<TestDataFixture, object>>[] includes)
             : base(dbContext, propertySelector, orderBySelector, includes)
         {

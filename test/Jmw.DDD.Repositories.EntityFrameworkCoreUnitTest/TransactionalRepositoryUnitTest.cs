@@ -6,6 +6,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
     using AutoFixture;
     using Jmw.DDD.Repositories.EntityFrameworkCore;
@@ -47,7 +48,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             // Arrange
             var fixture = new Fixture();
             var dbContext = new DbContextFixture();
-            Expression<Func<TestDataFixture, string>> orderBySelector = o => o.Id;
+            Func<IQueryable<TestDataFixture>, IOrderedQueryable<TestDataFixture>> orderBySelector = o => o.OrderBy(m => m.Id);
 
             // Act
             var sut = new TransactionalRepositoryFixture(dbContext, c => c.TestData, orderBySelector, p => p.Collection, p => p.Reference);

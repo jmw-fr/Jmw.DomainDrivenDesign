@@ -50,7 +50,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             // Arrange
             var fixture = new Fixture();
             var dbContext = new DbContextFixture();
-            Expression<Func<TestDataFixture, string>> orderBySelector = o => o.Id;
+            Func<IQueryable<TestDataFixture>, IOrderedQueryable<TestDataFixture>> orderBySelector = o => o.OrderBy(m => m.Id);
 
             // Act
             var sut = new ReadOnlyRepositoryFixture(dbContext, c => c.TestData, orderBySelector, p => p.Collection, p => p.Reference);
@@ -81,9 +81,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             // Act
 
             // Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await repository.QueryAsync(null, 0, 100, false));
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await repository.QueryAsync((o) => false, -1, 100, false));
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await repository.QueryAsync((o) => false, 0, -1, false));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await repository.QueryAsync(null, 0, 100));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await repository.QueryAsync((o) => false, -1, 100));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await repository.QueryAsync((o) => false, 0, -1));
         }
 
         /// <summary>
@@ -100,8 +100,8 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             // Act
 
             // Assert
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await repository.AnyAsync(-1, 100, false));
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await repository.AnyAsync(0, -1, false));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await repository.AnyAsync(-1, 100));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await repository.AnyAsync(0, -1));
         }
 
         /// <summary>
@@ -205,8 +205,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             var last = sut.DbSet.OrderByDescending(e => e.Id).First();
 
             // Act
-            var computed = await sut.AnyAsync(0, int.MaxValue, false);
-            var computed2 = await sut.AnyAsync(0, 1, true);
+            var computed = await sut.AnyAsync(0, int.MaxValue);
 
             // Assert
             Assert.Equal(sut.DbSet.Count(), computed.Count());
@@ -215,9 +214,6 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
                 enumerator.MoveNext();
                 Assert.Equal(enumerator.Current.Id, c.Id);
             });
-
-            Assert.Single(computed2);
-            Assert.Equal(last.Id, computed2.First().Id);
         }
 
         /// <summary>
@@ -235,8 +231,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             var enumerator = entities.GetEnumerator();
 
             // Act
-            var computed = await sut.QueryAsync(e => e.Id != entite.Id, 0, int.MaxValue, false);
-            var computed2 = await sut.QueryAsync(e => e.Id == entite.Id, 0, 1, true);
+            var computed = await sut.QueryAsync(e => e.Id != entite.Id, 0, int.MaxValue);
 
             // Assert
             Assert.Equal(entities.Count(), computed.Count());
@@ -245,9 +240,6 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
                 enumerator.MoveNext();
                 Assert.Equal(enumerator.Current.Id, c.Id);
             });
-
-            Assert.Single(computed2);
-            Assert.Equal(entite.Id, computed2.First().Id);
         }
     }
 }

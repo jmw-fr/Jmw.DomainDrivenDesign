@@ -38,7 +38,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         public ReadOnlyRepository(
             TContext context,
             Func<TContext, DbSet<TData>> propertySelector,
-            Expression<Func<TData, TOrderBy>> orderBySelector = null,
+            Func<IQueryable<TData>, IOrderedQueryable<TData>> orderBySelector = null,
             params Expression<Func<TData, object>>[] includes)
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));
@@ -72,7 +72,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         /// <summary>
         /// Gets the order by property selector.
         /// </summary>
-        protected internal Expression<Func<TData, TOrderBy>> OrderBySelector { get; }
+        protected internal Func<IQueryable<TData>, IOrderedQueryable<TData>> OrderBySelector { get; }
 
         /// <summary>
         /// Gets the properties to get while selecting data.
@@ -139,7 +139,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         {
             Logger.Debug("ReadOnlyRepository::FirstAsync");
 
-            return await PrepareQuery(predicate, 0, 1, false).FirstOrDefaultAsync();
+            return await PrepareQuery(predicate, 0, 1).FirstOrDefaultAsync();
         }
 
         /// <inheritdoc/>
@@ -147,19 +147,19 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         {
             Logger.Debug("ReadOnlyRepository::LastAsync");
 
-            return await PrepareQuery(predicate, 0, 1, true).FirstOrDefaultAsync();
+            return await PrepareQuery(predicate, 0, int.MaxValue).LastOrDefaultAsync();
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<TData>> AnyAsync(long skip, long take, bool lastFirst)
+        public async Task<IEnumerable<TData>> AnyAsync(long skip, long take)
         {
             Logger.Debug("ReadOnlyRepository::AnyAsync");
 
-            return await Task.FromResult(PrepareQuery(null, skip, take, lastFirst).AsEnumerable());
+            return await Task.FromResult(PrepareQuery(null, skip, take).AsEnumerable());
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<TData>> QueryAsync(Expression<Func<TData, bool>> predicate, long skip, long take, bool lastFirst)
+        public async Task<IEnumerable<TData>> QueryAsync(Expression<Func<TData, bool>> predicate, long skip, long take)
         {
             Logger.Debug("ReadOnlyRepository::QueryAsync");
 
@@ -168,7 +168,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
                 throw new ArgumentNullException(nameof(predicate), "Use AnyAsync instead.");
             }
 
-            return await Task.FromResult(PrepareQuery(predicate, skip, take, lastFirst).AsEnumerable());
+            return await Task.FromResult(PrepareQuery(predicate, skip, take).AsEnumerable());
         }
 
         private static string GetPropertyName(Expression<Func<TData, object>> propertyLambda)
@@ -184,7 +184,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
             return memberExpression.Member.Name;
         }
 
-        private IQueryable<TData> PrepareQuery(Expression<Func<TData, bool>> predicate, long skip, long take, bool lastFirst)
+        private IQueryable<TData> PrepareQuery(Expression<Func<TData, bool>> predicate, long skip, long take)
         {
             // Entity Framework supports only int only until now.
             if (skip < 0 || skip > int.MaxValue)
@@ -213,14 +213,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
                 query = query.Where(predicate);
             }
 
-            if (lastFirst)
-            {
-                query = query.OrderByDescending(OrderBySelector);
-            }
-            else
-            {
-                query = query.OrderBy(OrderBySelector);
-            }
+            query = OrderBySelector(query);
 
             return query
                 .Skip((int)skip)
