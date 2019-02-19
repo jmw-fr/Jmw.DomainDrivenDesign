@@ -50,18 +50,11 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             var sut = new ReadOnlyRepositoryFixture(dbContext, c => c.TestData);
 
             // Assert
-            Assert.Equal(dbContext, sut.Context);
-            Assert.Equal(dbContext.TestData, sut.DbSet);
-            Assert.Collection(
-                sut.Includes,
-                (s) => Assert.Equal(nameof(TestDataFixture.Collection), s),
-                (s) => Assert.Equal(nameof(TestDataFixture.Reference), s));
-            Assert.Null(sut.Schema); // Assert.Equal("Schema", sut.Schema); // Can't test schema with InMemory now.
-            Assert.Equal(nameof(TestDataFixture), sut.TableName);
+            Assert.NotNull(sut.Configuration);
         }
 
         /// <summary>
-        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey}.QueryAsync" />
+        /// Checks that <see cref="RepositoryBase{TContext, TData}.QueryAsync" />
         /// correctly checks the parameters.
         /// </summary>
         [Fact]
@@ -81,7 +74,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         }
 
         /// <summary>
-        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey}.AnyAsync" />
+        /// Checks that <see cref="RepositoryBase{TContext, TData}.AnyAsync" />
         /// correctly checks the parameters.
         /// </summary>
         [Fact]
@@ -99,7 +92,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         }
 
         /// <summary>
-        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey}.CountAsync"/>
+        /// Checks that <see cref="RepositoryBase{TContext, TData}.CountAsync"/>
         /// returns the correct Count.
         /// </summary>
         /// <param name="includeReferences">Includes and check references.</param>
@@ -117,7 +110,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             var computed2 = await sut.CountAsync(e => false);
 
             // Assert
-            Assert.Equal(sut.DbSet.Count(), computed);
+            Assert.Equal(sut.Configuration.DbSet.Count(), computed);
             Assert.Equal(0, computed2);
         }
 
@@ -134,7 +127,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         {
             // Arrange
             var sut = new ReadOnlyRepositoryFixture(includeReferences);
-            var entity = sut.DbSet.Last();
+            var entity = sut.Configuration.DbSet.Last();
 
             // Act
             var computed = await sut.FindAsync(entity.Id);
@@ -152,7 +145,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         }
 
         /// <summary>
-        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey}.FirstAsync"/>
+        /// Checks that <see cref="RepositoryBase{TContext, TData}.FirstAsync"/>
         /// returns the correct entity.
         /// </summary>
         /// <param name="includeReferences">Includes and check references.</param>
@@ -164,7 +157,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         {
             // Arrange
             var sut = new ReadOnlyRepositoryFixture(includeReferences);
-            var firstEntity = sut.DbSet.OrderBy(e => e.Id).First();
+            var firstEntity = sut.Configuration.DbSet.OrderBy(e => e.Id).First();
 
             // Act
             var computed = await sut.FirstAsync();
@@ -184,7 +177,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         }
 
         /// <summary>
-        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey}.LastAsync"/>
+        /// Checks that <see cref="RepositoryBase{TContext, TData}.LastAsync"/>
         /// returns the correct entity.
         /// </summary>
         /// <param name="includeReferences">Includes and check references.</param>
@@ -196,7 +189,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         {
             // Arrange
             var sut = new ReadOnlyRepositoryFixture(includeReferences);
-            var lastEntity = sut.DbSet.OrderBy(e => e.Id).Last();
+            var lastEntity = sut.Configuration.DbSet.OrderBy(e => e.Id).Last();
 
             // Act
             var computed = await sut.LastAsync();
@@ -215,7 +208,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         }
 
         /// <summary>
-        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey}.AnyAsync"/>
+        /// Checks that <see cref="RepositoryBase{TContext, TData}.AnyAsync"/>
         /// returns the correct entities.
         /// </summary>
         /// <param name="includeReferences">Includes and check references.</param>
@@ -227,14 +220,14 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         {
             // Arrange
             var sut = new ReadOnlyRepositoryFixture(includeReferences);
-            var enumerator = sut.DbSet.OrderBy(e => e.Id).GetEnumerator();
-            var last = sut.DbSet.OrderByDescending(e => e.Id).First();
+            var enumerator = sut.Configuration.DbSet.OrderBy(e => e.Id).GetEnumerator();
+            var last = sut.Configuration.DbSet.OrderByDescending(e => e.Id).First();
 
             // Act
             var computed = await sut.AnyAsync(0, int.MaxValue);
 
             // Assert
-            Assert.Equal(sut.DbSet.Count(), computed.Count());
+            Assert.Equal(sut.Configuration.DbSet.Count(), computed.Count());
             Assert.All(computed, c =>
             {
                 enumerator.MoveNext();
@@ -249,7 +242,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         }
 
         /// <summary>
-        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey}.QueryAsync"/>
+        /// Checks that <see cref="RepositoryBase{TContext, TData}.QueryAsync"/>
         /// returns the correct entities.
         /// </summary>
         /// <param name="includeReferences">Includes and check references.</param>
@@ -261,8 +254,8 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         {
             // Arrange
             var sut = new ReadOnlyRepositoryFixture(includeReferences);
-            var entite = sut.DbSet.First();
-            var entities = sut.DbSet.Where(e => e.Id != entite.Id).OrderBy(e => e.Id);
+            var entite = sut.Configuration.DbSet.First();
+            var entities = sut.Configuration.DbSet.Where(e => e.Id != entite.Id).OrderBy(e => e.Id);
             var enumerator = entities.GetEnumerator();
 
             // Act

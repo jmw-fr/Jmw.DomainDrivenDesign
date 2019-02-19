@@ -21,8 +21,6 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
         public RepositoryFixture()
             : base(new DbContextFixture(), p => p.TestData)
         {
-            SetOrderBy(m => m.Id);
-            SetIncludes(m => m.Collection, m => m.Reference);
         }
 
         /// <summary>
@@ -35,8 +33,17 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
             Func<DbContextFixture, DbSet<TestDataFixture>> propertySelector)
             : base(dbContext, propertySelector)
         {
-            SetOrderBy(m => m.Id);
-            SetIncludes(m => m.Collection, m => m.Reference);
+        }
+
+        /// <inheritdoc/>
+        protected override void OnConfigure(RepositoryConfiguration<DbContextFixture, TestDataFixture> configuration)
+        {
+            configuration
+                .OrderBy(m => m.Id);
+
+            configuration
+                .Include(m => m.Collection)
+                .Include(m => m.Reference);
         }
     }
 }

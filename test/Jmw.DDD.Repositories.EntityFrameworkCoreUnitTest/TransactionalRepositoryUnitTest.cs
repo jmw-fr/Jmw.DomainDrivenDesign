@@ -50,12 +50,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             var sut = new TransactionalRepositoryFixture(dbContext, c => c.TestData);
 
             // Assert
-            Assert.Equal(dbContext, sut.Context);
-            Assert.Equal(dbContext.TestData, sut.DbSet);
-            Assert.Collection(
-                sut.Includes,
-                (s) => Assert.Equal(nameof(TestDataFixture.Collection), s),
-                (s) => Assert.Equal(nameof(TestDataFixture.Reference), s));
+            Assert.NotNull(sut.Configuration);
         }
     }
 }

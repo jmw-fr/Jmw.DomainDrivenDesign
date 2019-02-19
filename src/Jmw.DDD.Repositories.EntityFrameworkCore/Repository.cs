@@ -44,9 +44,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
 
             entity.ValidateModel();
 
-            DbSet.Add(entity);
+            Configuration.DbSet.Add(entity);
 
-            await Context.SaveChangesAsync();
+            await Configuration.Context.SaveChangesAsync();
         }
 
         /// <inheritdoc />
@@ -59,9 +59,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
 
             entity.ValidateModel();
 
-            DbSet.Update(entity);
+            Configuration.DbSet.Update(entity);
 
-            await Context.SaveChangesAsync();
+            await Configuration.Context.SaveChangesAsync();
         }
     }
 }

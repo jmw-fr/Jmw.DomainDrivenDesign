@@ -24,12 +24,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
         public ReadOnlyRepositoryFixture(bool includeReferences)
             : base(new DbContextFixture(), p => p.TestData)
         {
-            SetOrderBy(m => m.Id);
-
-            if (includeReferences)
-            {
-                SetIncludes(m => m.Collection, m => m.Reference);
-            }
+            IncludeReferences = includeReferences;
 
             Seed();
         }
@@ -44,9 +39,26 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
             Func<DbContextFixture, DbSet<TestDataFixture>> propertySelector)
             : base(dbContext, propertySelector)
         {
-            SetOrderBy(m => m.Id);
+            Seed();
+        }
 
-            SetIncludes(m => m.Collection, m => m.Reference);
+        /// <summary>
+        /// Gets a value indicating whether indicates if we should include references.
+        /// </summary>
+        public bool IncludeReferences { get; }
+
+        /// <inheritdoc/>
+        protected override void OnConfigure(RepositoryConfiguration<DbContextFixture, TestDataFixture> configuration)
+        {
+            configuration
+                .OrderBy(m => m.Id);
+
+            if (IncludeReferences)
+            {
+                configuration
+                    .Include(m => m.Collection)
+                    .Include(m => m.Reference);
+            }
         }
 
         /// <summary>
@@ -57,9 +69,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
             var fixture = new Fixture();
             var testData = fixture.Create<IEnumerable<TestDataFixture>>();
 
-            this.Context.AddRange(testData);
+            Configuration.Context.AddRange(testData);
 
-            this.Context.SaveChanges();
+            Configuration.Context.SaveChanges();
         }
     }
 }

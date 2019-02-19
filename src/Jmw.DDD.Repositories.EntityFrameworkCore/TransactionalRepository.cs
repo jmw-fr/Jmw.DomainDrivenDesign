@@ -36,18 +36,18 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         /// <inheritdoc/>
         public async Task BeginTransactionAsync(bool exclusiveAccess = false)
         {
-            if (Context.Database.CurrentTransaction is null)
+            if (Configuration.Context.Database.CurrentTransaction is null)
             {
-                await Context.Database.BeginTransactionAsync();
+                await Configuration.Context.Database.BeginTransactionAsync();
             }
 
             if (exclusiveAccess)
             {
-                if (this.Context.Database.ProviderName == "Npgsql.EntityFrameworkCore.PostgreSQL")
+                if (Configuration.Context.Database.ProviderName == "Npgsql.EntityFrameworkCore.PostgreSQL")
                 {
-                    string sql = $"LOCK TABLE \"{Schema}\".\"{TableName}\" IN ACCESS EXCLUSIVE MODE;";
+                    string sql = $"LOCK TABLE \"{Configuration.Schema}\".\"{Configuration.TableName}\" IN ACCESS EXCLUSIVE MODE;";
 
-                    await Context.Database.ExecuteSqlCommandAsync(sql);
+                    await Configuration.Context.Database.ExecuteSqlCommandAsync(sql);
                 }
                 else
                 {
@@ -59,9 +59,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         /// <inheritdoc/>
         public async Task CommitTransactionAsync()
         {
-            if (Context.Database.CurrentTransaction != null)
+            if (Configuration.Context.Database.CurrentTransaction != null)
             {
-                Context.Database.CommitTransaction();
+                Configuration.Context.Database.CommitTransaction();
             }
 
             await Task.CompletedTask;
@@ -70,9 +70,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         /// <inheritdoc/>
         public async Task RollbackTransactionAsync()
         {
-            if (Context.Database.CurrentTransaction != null)
+            if (Configuration.Context.Database.CurrentTransaction != null)
             {
-                Context.Database.RollbackTransaction();
+                Configuration.Context.Database.RollbackTransaction();
             }
 
             await Task.CompletedTask;
@@ -81,7 +81,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         /// <inheritdoc/>
         public bool TransactionInProgress()
         {
-            return Context.Database.CurrentTransaction != null;
+            return Configuration.Context.Database.CurrentTransaction != null;
         }
     }
 }
