@@ -11,7 +11,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
     using Xunit;
 
     /// <summary>
-    /// <see cref="TransactionalRepository{TContext, TData, TKey, TOrderBy}"/> unit tests.
+    /// <see cref="TransactionalRepository{TContext, TData, TKey}"/> unit tests.
     /// </summary>
     public class TransactionalRepositoryUnitTest
     {

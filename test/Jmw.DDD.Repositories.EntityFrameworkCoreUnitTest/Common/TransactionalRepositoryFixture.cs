@@ -9,11 +9,11 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
-    /// Fixture of <see cref="TransactionalRepository{TContext, TData, TKey, TOrderBy}" />
+    /// Fixture of <see cref="TransactionalRepository{TContext, TData, TKey}" />
     /// for unit testing.
     /// </summary>
     public class TransactionalRepositoryFixture :
-        TransactionalRepository<DbContextFixture, TestDataFixture, string, string>
+        TransactionalRepository<DbContextFixture, TestDataFixture, string>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TransactionalRepositoryFixture"/> class.

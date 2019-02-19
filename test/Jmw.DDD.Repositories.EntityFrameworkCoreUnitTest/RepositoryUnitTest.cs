@@ -11,7 +11,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
     using Xunit;
 
     /// <summary>
-    /// <see cref="Repository{TContext, TData, TKey, TOrderBy}"/> unit tests.
+    /// <see cref="Repository{TContext, TData, TKey}"/> unit tests.
     /// </summary>
     public class RepositoryUnitTest
     {
@@ -55,7 +55,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         }
 
         /// <summary>
-        /// Checks that <see cref="Repository{TContext, TData, TKey, TOrderBy}.InsertAsync" />
+        /// Checks that <see cref="Repository{TContext, TData, TKey}.InsertAsync" />
         /// correctly checks the parameters.
         /// </summary>
         [Fact]
@@ -72,7 +72,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         }
 
         /// <summary>
-        /// Checks that <see cref="Repository{TContext, TData, TKey, TOrderBy}.UpdateAsync" />
+        /// Checks that <see cref="Repository{TContext, TData, TKey}.UpdateAsync" />
         /// correctly checks the parameters.
         /// </summary>
         [Fact]

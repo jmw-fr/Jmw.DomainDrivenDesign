@@ -16,15 +16,14 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
     /// <typeparam name="TContext">Entity DbContext class.</typeparam>
     /// <typeparam name="TData">Repository entity data type.</typeparam>
     /// <typeparam name="TKey">Repository key type.</typeparam>
-    /// <typeparam name="TOrderBy">Order by property type.</typeparam>
-    public abstract class Repository<TContext, TData, TKey, TOrderBy> :
-        ReadOnlyRepository<TContext, TData, TKey, TOrderBy>,
+    public abstract class Repository<TContext, TData, TKey> :
+        ReadOnlyRepository<TContext, TData, TKey>,
         IRepository<TData, TKey>
         where TContext : DbContext
         where TData : class
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Repository{TContext, TData, TKey, TOrderBy}"/> class.
+        /// Initializes a new instance of the <see cref="Repository{TContext, TData, TKey}"/> class.
         /// </summary>
         /// <param name="context">EntityFramework context to use.</param>
         /// <param name="propertySelector">Selector of the DbSet property of <paramref name="context"/>.</param>

@@ -7,12 +7,13 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
     using System;
     using System.Linq;
     using AutoFixture;
+    using Jmw.DDD.Domain.Repositories;
     using Jmw.DDD.Repositories.EntityFrameworkCore;
     using Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common;
     using Xunit;
 
     /// <summary>
-    /// <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}"/> unit tests.
+    /// <see cref="ReadOnlyRepository{TContext, TData, TKey}"/> unit tests.
     /// </summary>
     public class ReadOnlyRepositoryUnitTest
     {
@@ -60,7 +61,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         }
 
         /// <summary>
-        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.QueryAsync" />
+        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey}.QueryAsync" />
         /// correctly checks the parameters.
         /// </summary>
         [Fact]
@@ -76,10 +77,11 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await repository.QueryAsync(null, 0, 100));
             await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await repository.QueryAsync((o) => false, -1, 100));
             await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await repository.QueryAsync((o) => false, 0, -1));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await repository.QueryAsync((o) => false, 0, 1, (SortOrder)(-1)));
         }
 
         /// <summary>
-        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.AnyAsync" />
+        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey}.AnyAsync" />
         /// correctly checks the parameters.
         /// </summary>
         [Fact]
@@ -97,7 +99,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         }
 
         /// <summary>
-        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.CountAsync"/>
+        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey}.CountAsync"/>
         /// returns the correct Count.
         /// </summary>
         /// <param name="includeReferences">Includes and check references.</param>
@@ -120,7 +122,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         }
 
         /// <summary>
-        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.FindAsync"/>
+        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey}.FindAsync"/>
         /// returns the correct entity.
         /// </summary>
         /// <param name="includeReferences">Includes and check references.</param>
@@ -150,7 +152,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         }
 
         /// <summary>
-        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.FirstAsync"/>
+        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey}.FirstAsync"/>
         /// returns the correct entity.
         /// </summary>
         /// <param name="includeReferences">Includes and check references.</param>
@@ -182,7 +184,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         }
 
         /// <summary>
-        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.LastAsync"/>
+        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey}.LastAsync"/>
         /// returns the correct entity.
         /// </summary>
         /// <param name="includeReferences">Includes and check references.</param>
@@ -213,7 +215,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         }
 
         /// <summary>
-        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.AnyAsync"/>
+        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey}.AnyAsync"/>
         /// returns the correct entities.
         /// </summary>
         /// <param name="includeReferences">Includes and check references.</param>
@@ -247,7 +249,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         }
 
         /// <summary>
-        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}.QueryAsync"/>
+        /// Checks that <see cref="ReadOnlyRepository{TContext, TData, TKey}.QueryAsync"/>
         /// returns the correct entities.
         /// </summary>
         /// <param name="includeReferences">Includes and check references.</param>

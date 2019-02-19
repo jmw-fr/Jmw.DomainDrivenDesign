@@ -11,11 +11,11 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
-    /// Fixture of <see cref="ReadOnlyRepository{TContext, TData, TKey, TOrderBy}" />
+    /// Fixture of <see cref="ReadOnlyRepository{TContext, TData, TKey}" />
     /// for unit testing.
     /// </summary>
     public class ReadOnlyRepositoryFixture :
-        ReadOnlyRepository<DbContextFixture, TestDataFixture, string, string>
+        ReadOnlyRepository<DbContextFixture, TestDataFixture, string>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ReadOnlyRepositoryFixture"/> class.
