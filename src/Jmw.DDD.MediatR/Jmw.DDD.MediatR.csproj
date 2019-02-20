@@ -34,5 +34,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Queries\Handlers\" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Jmw.DDD\Jmw.DDD.csproj" />
+  </ItemGroup>
 
 </Project>

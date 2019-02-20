@@ -7,7 +7,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
     using System;
     using System.Linq;
     using AutoFixture;
-    using Jmw.DDD.Domain.Repositories;
+    using Jmw.DDD.Domain;
     using Jmw.DDD.Repositories.EntityFrameworkCore;
     using Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common;
     using Xunit;

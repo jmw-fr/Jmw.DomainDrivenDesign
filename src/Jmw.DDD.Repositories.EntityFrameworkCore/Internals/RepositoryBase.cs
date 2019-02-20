@@ -10,6 +10,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Threading.Tasks;
+    using Jmw.DDD.Domain;
     using Jmw.DDD.Domain.Repositories;
     using Microsoft.EntityFrameworkCore;
     using NLog;

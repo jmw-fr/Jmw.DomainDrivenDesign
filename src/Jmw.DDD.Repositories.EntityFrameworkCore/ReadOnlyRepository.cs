@@ -5,16 +5,10 @@
 namespace Jmw.DDD.Repositories.EntityFrameworkCore
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Linq.Expressions;
-    using System.Reflection;
     using System.Threading.Tasks;
     using Jmw.DDD.Domain.Repositories;
-    using Jmw.DDD.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata;
-    using NLog;
 
     /// <summary>
     /// Basic implementation of <see cref="IReadOnlyRepository{TData, TKey}"/> for EntityFrameworkCore.
