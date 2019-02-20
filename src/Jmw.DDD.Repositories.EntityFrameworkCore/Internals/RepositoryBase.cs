@@ -28,7 +28,8 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         /// </summary>
         protected static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
 
-        private RepositoryConfiguration<TContext, TData> configuration;
+        private readonly RepositoryConfiguration<TContext, TData> configuration;
+
         private bool configured;
 
         /// <summary>

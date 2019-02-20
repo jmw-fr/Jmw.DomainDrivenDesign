@@ -30,6 +30,10 @@
 
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.8.0" />
+    <PackageReference Include="GitVersionTask" Version="4.0.1-beta1-65">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="reportgenerator" Version="4.0.8" />
     <PackageReference Include="coverlet.msbuild" Version="2.5.1">
       <PrivateAssets>all</PrivateAssets>

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>Jmw.DDD.MediatR</id>
+    <version>1.3.0</version>
+    <description>
+      Some helper classes for implmenting DDD with MediatR.
+    </description>
+    <projectUrl>https://github.com/jmw-fr/Jmw.DomainDrivenDesign</projectUrl>
+    <authors>Jean-Marc Weeger</authors>
+    <license type="expression">MIT</license>
+    <dependencies>
+      <dependency id="Jmw.ComponentModel.DataAnnotations" version="1.0.0" />
+      <dependency id="Jmw.DDD" version="1.3.0"/>
+      <dependency id="NLog" version="4.5.11" />
+      <dependency id="MediatR" version="6.0.0" />
+    </dependencies>
+  </metadata>
+</package>
