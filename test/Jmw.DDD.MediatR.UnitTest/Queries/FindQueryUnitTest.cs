@@ -4,6 +4,7 @@
 
 namespace Jmw.DDD.MediatR.UnitTest.Queries
 {
+    using System;
     using AutoFixture;
     using Jmw.DDD.Queries;
     using Xunit;
@@ -22,10 +23,10 @@ namespace Jmw.DDD.MediatR.UnitTest.Queries
         {
             // Arrange
             var fixture = new Fixture();
-            var id = fixture.Create<string>();
+            var id = fixture.Create<Guid>();
 
             // Act
-            var sut = new FindQuery<string, string>(id);
+            var sut = new FindQuery<string, Guid>(id);
 
             // Assert
             Assert.Equal(id, sut.Id);

@@ -25,16 +25,18 @@ namespace Jmw.DDD.MediatR.UnitTest.Queries
             // Arrange
             var fixture = new Fixture();
             var data = fixture.Create<IEnumerable<string>>();
+            var totalElements = fixture.Create<long>();
             var skip = fixture.Create<long>();
             var take = fixture.Create<long>();
             var sortOrder = fixture.Create<SortOrder>();
             var draw = fixture.Create<long>();
 
             // Act
-            var sut = new ListQueryResult<string>(data, skip, take, sortOrder, draw);
+            var sut = new ListQueryResult<string>(data, totalElements, skip, take, sortOrder, draw);
 
             // Assert
             Assert.Equal(data, sut.Data);
+            Assert.Equal(totalElements, sut.TotalElements);
             Assert.Equal(skip, sut.Skip);
             Assert.Equal(take, sut.Take);
             Assert.Equal(sortOrder, sut.SortOrder);

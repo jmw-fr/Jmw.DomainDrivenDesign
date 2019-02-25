@@ -17,13 +17,21 @@ namespace Jmw.DDD.Queries
         /// Initializes a new instance of the <see cref="ListQueryResult{T}"/> class.
         /// </summary>
         /// <param name="data">Data returned.</param>
+        /// <param name="totalElements">Number of elements of the query.</param>
         /// <param name="skip">Number of elements skipped in the query result.</param>
         /// <param name="take">Number of elements that should be returned.</param>
         /// <param name="sortOrder">Sort order of the data to retrieve.</param>
         /// <param name="draw">Request number.</param>
-        public ListQueryResult(IEnumerable<T> data, long skip, long take, SortOrder sortOrder, long draw)
+        public ListQueryResult(
+            IEnumerable<T> data,
+            long totalElements,
+            long skip,
+            long take,
+            SortOrder sortOrder,
+            long draw)
         {
             Data = data;
+            TotalElements = totalElements;
             Skip = skip;
             Take = take;
             SortOrder = sortOrder;
@@ -31,29 +39,29 @@ namespace Jmw.DDD.Queries
         }
 
         /// <summary>
-        /// Gets or sets the request number from <see cref="ListQueryResult{T}.Draw" />.
+        /// Gets the request number from <see cref="ListQueryResult{T}.Draw" />.
         /// </summary>
-        public long Draw { get; set; }
+        public long Draw { get; }
 
         /// <summary>
-        /// Gets or sets the data result.
+        /// Gets the data result.
         /// </summary>
-        public IEnumerable<T> Data { get; set; }
+        public IEnumerable<T> Data { get; }
 
         /// <summary>
-        /// Gets or sets the total number of elements corresponding to the request.
+        /// Gets the total number of elements corresponding to the request.
         /// </summary>
-        public long TotalElements { get; set; }
+        public long TotalElements { get; }
 
         /// <summary>
-        /// Gets or sets the number of elements skipped in the query result.
+        /// Gets the number of elements skipped in the query result.
         /// </summary>
-        public long Skip { get; set; }
+        public long Skip { get; }
 
         /// <summary>
-        /// Gets or sets the number of elements that should be returned.
+        /// Gets the number of elements that should be returned.
         /// </summary>
-        public long Take { get; set; }
+        public long Take { get; }
 
         /// <summary>
         /// Gets the sort order.
