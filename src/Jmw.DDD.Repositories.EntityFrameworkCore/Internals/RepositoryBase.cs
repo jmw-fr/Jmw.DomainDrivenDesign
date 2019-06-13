@@ -128,7 +128,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         {
             Logger.Debug("RepositoryBase::AnyAsync");
 
-            return await Task.FromResult(PrepareQuery(null, skip, take, sortOrder).AsEnumerable());
+            return await PrepareQuery(null, skip, take, sortOrder).ToListAsync();
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
                 throw new ArgumentNullException(nameof(predicate), "Use AnyAsync instead.");
             }
 
-            return await Task.FromResult(PrepareQuery(predicate, skip, take, sortOrder).AsEnumerable());
+            return await PrepareQuery(predicate, skip, take, sortOrder).ToListAsync();
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
                 throw new ArgumentOutOfRangeException(nameof(sortOrder));
             }
 
-            IQueryable<TData> query = Configuration.DbSet.AsNoTracking();
+            IQueryable<TData> query = Configuration.DbSet;
 
             foreach (string include in Configuration.IncludeProperties)
             {

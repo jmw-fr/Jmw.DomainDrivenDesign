@@ -3,6 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
     <CodeAnalysisRuleSet>..\..\stylecop.ruleset</CodeAnalysisRuleSet>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/jmw-fr/Jmw.DomainDrivenDesign</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Company>Jean-Marc Weeger</Company>
+    <Authors>Jean-Marc Weeger</Authors>
+    <Description>This library creates some abstractions (mainly interfaces) for Domain Driven Development, avoiding code duplications.</Description>
   </PropertyGroup>
 
   <ItemGroup>

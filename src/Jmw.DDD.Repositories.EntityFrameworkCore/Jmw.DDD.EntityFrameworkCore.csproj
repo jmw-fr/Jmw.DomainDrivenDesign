@@ -3,6 +3,15 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <CodeAnalysisRuleSet>..\..\stylecop.ruleset</CodeAnalysisRuleSet>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>Jmw.DDD.Repositories.EntityFrameworkCore</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Jean-Marc Weeger</Authors>
+    <Company>Jean-Marc Weeger</Company>
+    <Product>Jmw.DDD</Product>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/jmw-fr/Jmw.DomainDrivenDesign</PackageProjectUrl>
+    <Description>EntityFrameworkCore repository implementation</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
