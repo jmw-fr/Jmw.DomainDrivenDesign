@@ -1,12 +1,10 @@
-﻿// <copyright file="ListQueryResultUnitTest.cs" company="Jean-Marc Weeger">
-// Copyright My Company under MIT Licence. See https://opensource.org/licenses/mit-license.php.
-// </copyright>
+﻿// Copyright My Company under MIT Licence. See https://opensource.org/licenses/mit-license.php.
 
 namespace Jmw.DDD.MediatR.UnitTest.Queries
 {
     using System.Collections.Generic;
     using AutoFixture;
-    using Jmw.DDD.Domain;
+    using Jmw.DDD.Application;
     using Jmw.DDD.Queries;
     using Xunit;
 

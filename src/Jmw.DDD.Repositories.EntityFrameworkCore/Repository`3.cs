@@ -1,12 +1,8 @@
-﻿// <copyright file="Repository.cs" company="Jean-Marc Weeger">
-// Copyright My Company under MIT Licence. See https://opensource.org/licenses/mit-license.php.
-// </copyright>
+﻿// Copyright My Company under MIT Licence. See https://opensource.org/licenses/mit-license.php.
 
 namespace Jmw.DDD.Repositories.EntityFrameworkCore
 {
     using System;
-    using System.Threading.Tasks;
-    using Jmw.ComponentModel.DataAnnotations;
     using Jmw.DDD.Domain.Repositories;
     using Microsoft.EntityFrameworkCore;
 
@@ -16,8 +12,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
     /// <typeparam name="TContext">Entity DbContext class.</typeparam>
     /// <typeparam name="TData">Repository entity data type.</typeparam>
     /// <typeparam name="TKey">Repository key type.</typeparam>
+    [Obsolete("Please use TransactionalRepository.")]
     public abstract class Repository<TContext, TData, TKey> :
-        ReadOnlyRepository<TContext, TData, TKey>,
+        TransactionalRepository<TContext, TData, TKey>,
         IRepository<TData, TKey>
         where TContext : DbContext
         where TData : class
@@ -32,36 +29,6 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
             Func<TContext, DbSet<TData>> propertySelector)
             : base(context, propertySelector)
         {
-        }
-
-        /// <inheritdoc />
-        public async Task InsertAsync(TData entity)
-        {
-            if (entity is null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
-
-            entity.ValidateModel();
-
-            Configuration.DbSet.Add(entity);
-
-            await Configuration.Context.SaveChangesAsync();
-        }
-
-        /// <inheritdoc />
-        public async Task UpdateAsync(TData entity)
-        {
-            if (entity is null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
-
-            entity.ValidateModel();
-
-            Configuration.DbSet.Update(entity);
-
-            await Configuration.Context.SaveChangesAsync();
         }
     }
 }

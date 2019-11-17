@@ -1,8 +1,6 @@
-﻿// <copyright file="IReadOnlyRepository{TData,TKey}.cs" company="Jean-Marc Weeger">
-// Copyright My Company under MIT Licence. See https://opensource.org/licenses/mit-license.php.
-// </copyright>
+﻿// Copyright My Company under MIT Licence. See https://opensource.org/licenses/mit-license.php.
 
-namespace Jmw.DDD.Domain.Repositories
+namespace Jmw.DDD.Application.Repositories
 {
     using System;
     using System.Collections.Generic;

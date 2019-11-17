@@ -1,8 +1,6 @@
-﻿// <copyright file="ITransactionalRepository.cs" company="Jean-Marc Weeger">
-// Copyright My Company under MIT Licence. See https://opensource.org/licenses/mit-license.php.
-// </copyright>
+﻿// Copyright My Company under MIT Licence. See https://opensource.org/licenses/mit-license.php.
 
-namespace Jmw.DDD.Domain.Repositories
+namespace Jmw.DDD.Application.Repositories
 {
     using System;
     using System.Threading.Tasks;
@@ -13,7 +11,8 @@ namespace Jmw.DDD.Domain.Repositories
     /// <typeparam name="TData">Repository entity data type.</typeparam>
     /// <typeparam name="TKey">Repository key type.</typeparam>
     public interface ITransactionalRepository<TData, TKey> :
-        IRepository<TData, TKey>
+        IReadOnlyRepository<TData, TKey>,
+        IWriteOnlyRepository<TData, TKey>
         where TData : class
     {
         /// <summary>

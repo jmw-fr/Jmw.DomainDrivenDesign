@@ -1,13 +1,14 @@
-﻿// <copyright file="ReadOnlyRepository.cs" company="Jean-Marc Weeger">
-// Copyright My Company under MIT Licence. See https://opensource.org/licenses/mit-license.php.
-// </copyright>
+﻿// Copyright My Company under MIT Licence. See https://opensource.org/licenses/mit-license.php.
 
 namespace Jmw.DDD.Repositories.EntityFrameworkCore
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using Jmw.DDD.Domain.Repositories;
+    using Jmw.DDD.Application;
+    using Jmw.DDD.Application.Repositories;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
@@ -16,9 +17,10 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
     /// <typeparam name="TContext">Entity DbContext class.</typeparam>
     /// <typeparam name="TData">Repository entity data type.</typeparam>
     /// <typeparam name="TKey">Repository key type.</typeparam>
+    [Obsolete("Please use TransactionalRepository.")]
     public abstract class ReadOnlyRepository<TContext, TData, TKey> :
-        RepositoryBase<TContext, TData>,
-        IReadOnlyRepository<TData, TKey>
+        TransactionalRepository<TContext, TData, TKey>,
+        Domain.Repositories.IReadOnlyRepository<TData, TKey>
         where TContext : DbContext
         where TData : class
     {
@@ -33,30 +35,17 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         }
 
         /// <inheritdoc/>
-        public async Task<TData> FindAsync(TKey key)
+        [Obsolete("Pleasure the function using Application.SortOrder.")]
+        public Task<IEnumerable<TData>> QueryAsync(Expression<Func<TData, bool>> predicate, long skip, long take, Domain.SortOrder sortOrder = Domain.SortOrder.Ascending)
         {
-            Logger.Debug("ReadOnlyRepository::FindAsync");
+            return QueryAsync(predicate, skip, take, (SortOrder)sortOrder);
+        }
 
-            TData entity = await Configuration.DbSet.FindAsync(key);
-
-            foreach (var include in Configuration.IncludeProperties)
-            {
-                var reference = Configuration.Context.Entry(entity).References.Where(r => r.Metadata.Name == include).FirstOrDefault();
-
-                if (reference != null)
-                {
-                    await reference.LoadAsync();
-                }
-
-                var collection = Configuration.Context.Entry(entity).Collections.Where(r => r.Metadata.Name == include).FirstOrDefault();
-
-                if (collection != null)
-                {
-                    await collection.LoadAsync();
-                }
-            }
-
-            return entity;
+        /// <inheritdoc/>
+        [Obsolete("Pleasure the function using Application.SortOrder.")]
+        public Task<IEnumerable<TData>> AnyAsync(long skip, long take, Domain.SortOrder sortOrder = Domain.SortOrder.Ascending)
+        {
+            return AnyAsync(skip, take, (SortOrder)sortOrder);
         }
     }
 }

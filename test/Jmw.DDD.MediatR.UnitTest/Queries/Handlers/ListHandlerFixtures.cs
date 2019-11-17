@@ -1,6 +1,4 @@
-﻿// <copyright file="ListHandlerFixtures.cs" company="Jean-Marc Weeger">
-// Copyright My Company under MIT Licence. See https://opensource.org/licenses/mit-license.php.
-// </copyright>
+﻿// Copyright My Company under MIT Licence. See https://opensource.org/licenses/mit-license.php.
 
 namespace Jmw.DDD.MediatR.UnitTest.Queries.Handlers
 {
@@ -9,7 +7,8 @@ namespace Jmw.DDD.MediatR.UnitTest.Queries.Handlers
     using System.Linq.Expressions;
     using AutoFixture;
     using AutoMapper;
-    using Jmw.DDD.Domain.Repositories;
+    using Jmw.DDD.Application;
+    using Jmw.DDD.Application.Repositories;
     using Jmw.DDD.Queries;
     using Jmw.DDD.Queries.Handlers;
     using Moq;
@@ -40,7 +39,7 @@ namespace Jmw.DDD.MediatR.UnitTest.Queries.Handlers
                         Query = new ListQuery<string>(
                             fixture.Create<long>(),
                             fixture.Create<long>(),
-                            fixture.Create<Domain.SortOrder>(),
+                            fixture.Create<SortOrder>(),
                             fixture.Create<long>());
                         QueryResult = fixture.Create<IEnumerable<string>>();
                         Entities = fixture.Create<IEnumerable<string>>();
@@ -50,7 +49,7 @@ namespace Jmw.DDD.MediatR.UnitTest.Queries.Handlers
                             f => f.AnyAsync(
                                 It.Is<long>(m => m == Query.Skip),
                                 It.Is<long>(m => m == Query.Take),
-                                It.Is<Domain.SortOrder>(m => m == Query.SortOrder)))
+                                It.Is<SortOrder>(m => m == Query.SortOrder)))
                             .ReturnsAsync(Entities)
                             .Verifiable();
 
@@ -72,14 +71,14 @@ namespace Jmw.DDD.MediatR.UnitTest.Queries.Handlers
                         Query = new ListQuery<string>(
                             fixture.Create<long>(),
                             fixture.Create<long>(),
-                            fixture.Create<Domain.SortOrder>(),
+                            fixture.Create<SortOrder>(),
                             fixture.Create<long>());
 
                         ReadOnlyRepository.Setup(
                             f => f.AnyAsync(
                                 It.Is<long>(m => m == Query.Skip),
                                 It.Is<long>(m => m == Query.Take),
-                                It.Is<Domain.SortOrder>(m => m == Query.SortOrder)))
+                                It.Is<SortOrder>(m => m == Query.SortOrder)))
                             .Throws<InvalidOperationException>()
                             .Verifiable();
 
@@ -91,7 +90,7 @@ namespace Jmw.DDD.MediatR.UnitTest.Queries.Handlers
                         Query = new ListQuery<string>(
                             fixture.Create<long>(),
                             fixture.Create<long>(),
-                            fixture.Create<Domain.SortOrder>(),
+                            fixture.Create<SortOrder>(),
                             fixture.Create<long>());
                         QueryResult = fixture.Create<IEnumerable<string>>();
                         Entities = fixture.Create<IEnumerable<string>>();
@@ -101,7 +100,7 @@ namespace Jmw.DDD.MediatR.UnitTest.Queries.Handlers
                             f => f.AnyAsync(
                                 It.Is<long>(m => m == Query.Skip),
                                 It.Is<long>(m => m == Query.Take),
-                                It.Is<Domain.SortOrder>(m => m == Query.SortOrder)))
+                                It.Is<SortOrder>(m => m == Query.SortOrder)))
                             .ReturnsAsync(Entities)
                             .Verifiable();
 

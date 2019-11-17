@@ -1,13 +1,10 @@
 ﻿// Copyright My Company under MIT Licence. See https://opensource.org/licenses/mit-license.php.
 
-namespace Jmw.DDD.Domain
+namespace Jmw.DDD.Application
 {
-    using System;
-
     /// <summary>
     /// Sort order for queries.
     /// </summary>
-    [Obsolete("Please use Jmw.DDD.Application.Repositories.SortOrder.")]
     public enum SortOrder
     {
         /// <summary>

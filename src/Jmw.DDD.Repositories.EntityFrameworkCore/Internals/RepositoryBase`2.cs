@@ -1,17 +1,13 @@
-﻿// <copyright file="RepositoryBase.cs" company="Jean-Marc Weeger">
-// Copyright My Company under MIT Licence. See https://opensource.org/licenses/mit-license.php.
-// </copyright>
+﻿// Copyright My Company under MIT Licence. See https://opensource.org/licenses/mit-license.php.
 
 namespace Jmw.DDD.Repositories.EntityFrameworkCore
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using System.Threading.Tasks;
-    using Jmw.DDD.Domain;
-    using Jmw.DDD.Domain.Repositories;
+    using Jmw.DDD.Application;
+    using Jmw.DDD.Application.Repositories;
     using Microsoft.EntityFrameworkCore;
     using NLog;
 
@@ -67,110 +63,6 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         }
 
         /// <summary>
-        /// Implementation of <see cref="IReadOnlyRepository{TData, TKey}.CountAsync"/>.
-        /// </summary>
-        /// <param name="predicate">
-        /// Predicate function used to search the entities.
-        /// If <c>null</c> then the first entity of all the repository is searched.
-        /// </param>
-        /// <returns>
-        /// A task that represents the asynchronous count operation. The task result contains the entities count.
-        /// </returns>
-        public async Task<long> CountAsync(Expression<Func<TData, bool>> predicate = null)
-        {
-            Logger.Debug("RepositoryBase::CountAsync");
-
-            if (predicate is null)
-            {
-                return await Configuration.DbSet.LongCountAsync();
-            }
-            else
-            {
-                return await Configuration.DbSet.LongCountAsync(predicate);
-            }
-        }
-
-        /// <summary>
-        /// Implementation of <see cref="IReadOnlyRepository{TData, TKey}.FirstAsync"/>.
-        /// </summary>
-        /// <param name="predicate">Optional predicate function.</param>
-        /// <returns>Found data or <c>null</c>.</returns>
-        public async Task<TData> FirstAsync(Expression<Func<TData, bool>> predicate = null)
-        {
-            Logger.Debug("RepositoryBase::FirstAsync");
-
-            return await PrepareQuery(predicate, 0, 1, SortOrder.Ascending).FirstOrDefaultAsync();
-        }
-
-        /// <summary>
-        /// Implementation of <see cref="IReadOnlyRepository{TData, TKey}.LastAsync"/>.
-        /// </summary>
-        /// <param name="predicate">Optional predicate function.</param>
-        /// <returns>Found data or <c>null</c>.</returns>
-        public async Task<TData> LastAsync(Expression<Func<TData, bool>> predicate = null)
-        {
-            Logger.Debug("RepositoryBase::LastAsync");
-
-            return await PrepareQuery(predicate, 0, 1, SortOrder.Descending).FirstOrDefaultAsync();
-        }
-
-        /// <summary>
-        /// Implementation of <see cref="IReadOnlyRepository{TData, TKey}.AnyAsync"/>.
-        /// </summary>
-        /// <param name="skip">Optional predicate function.</param>
-        /// <param name="take">How many entity of the result to return.</param>
-        /// <param name="sortOrder">Sort order applied to the data.</param>
-        /// <returns>Found data or <c>null</c>.</returns>
-        public async Task<IEnumerable<TData>> AnyAsync(
-            long skip,
-            long take,
-            SortOrder sortOrder = SortOrder.Ascending)
-        {
-            Logger.Debug("RepositoryBase::AnyAsync");
-
-            return await PrepareQuery(null, skip, take, sortOrder).ToListAsync();
-        }
-
-        /// <summary>
-        /// Implementation of <see cref="IReadOnlyRepository{TData, TKey}.QueryAsync"/>.
-        /// </summary>
-        /// <param name="predicate">
-        /// Predicate function used to search the entities.
-        /// </param>
-        /// <param name="skip">How many entity of the result to skip.</param>
-        /// <param name="take">How many entity of the result to return.</param>
-        /// <param name="sortOrder">Sort order applied to the data.</param>
-        /// <returns>Found data or <c>null</c>.</returns>
-        public async Task<IEnumerable<TData>> QueryAsync(
-            Expression<Func<TData, bool>> predicate,
-            long skip,
-            long take,
-            SortOrder sortOrder = SortOrder.Ascending)
-        {
-            Logger.Debug("RepositoryBase::QueryAsync");
-
-            if (predicate == null)
-            {
-                throw new ArgumentNullException(nameof(predicate), "Use AnyAsync instead.");
-            }
-
-            return await PrepareQuery(predicate, skip, take, sortOrder).ToListAsync();
-        }
-
-        /// <summary>
-        /// <para>
-        /// Function called to override default configuration.
-        /// </para>
-        /// <para>
-        /// Override this function to setup repository OrderBy and includes.
-        /// </para>
-        /// </summary>
-        /// <param name="configuration">Repository configuration.</param>
-        protected virtual void OnConfigure(RepositoryConfiguration<TContext, TData> configuration)
-        {
-        }
-
-        /// <summary>
         /// From https://stackoverflow.com/questions/31955025/generate-ef-orderby-expression-by-string :)
         /// </summary>
         /// <typeparam name="TSource">Source type</typeparam>
@@ -178,7 +70,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         /// <param name="methodName">Order by method to use.</param>
         /// <param name="propertyName">Property name.</param>
         /// <returns>Ordered query.</returns>
-        private static IOrderedQueryable<TSource> MakeOrderExpression<TSource>(
+        protected static IOrderedQueryable<TSource> MakeOrderExpression<TSource>(
             IQueryable<TSource> query,
             string methodName,
             string propertyName)
@@ -216,7 +108,28 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
             return newQuery;
         }
 
-        private IQueryable<TData> PrepareQuery(
+        /// <summary>
+        /// <para>
+        /// Function called to override default configuration.
+        /// </para>
+        /// <para>
+        /// Override this function to setup repository OrderBy and includes.
+        /// </para>
+        /// </summary>
+        /// <param name="configuration">Repository configuration.</param>
+        protected virtual void OnConfigure(RepositoryConfiguration<TContext, TData> configuration)
+        {
+        }
+
+        /// <summary>
+        /// Prepare an Entity query.
+        /// </summary>
+        /// <param name="predicate">Predicate function.</param>
+        /// <param name="skip">Number of elements to skip.</param>
+        /// <param name="take">Number of elements to return.</param>
+        /// <param name="sortOrder">Sort order of the elements.</param>
+        /// <returns>Queryable object.</returns>
+        protected IQueryable<TData> PrepareQuery(
             Expression<Func<TData, bool>> predicate,
             long skip,
             long take,

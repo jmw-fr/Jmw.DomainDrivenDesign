@@ -1,6 +1,4 @@
-﻿// <copyright file="AssemblyInfo.cs" company="Jean-Marc Weeger">
-// Copyright My Company under MIT Licence. See https://opensource.org/licenses/mit-license.php.
-// </copyright>
+﻿// Copyright My Company under MIT Licence. See https://opensource.org/licenses/mit-license.php.
 
 using System.Runtime.CompilerServices;
 
