@@ -263,3 +263,5 @@ __pycache__/
 # Repo specific ignores
 /coveragereport
 coverage.cobertura.xml
+
+**/.DS_Store

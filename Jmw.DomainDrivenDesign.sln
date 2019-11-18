@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.329
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C1D753BE-9E1A-4CC6-BB26-2F8BDB0C3C3A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{8739A545-D67C-4ED1-AD98-905610D1BCEE}"
+	ProjectSection(SolutionItems) = preProject
+		test\Directory.Build.targets = test\Directory.Build.targets
+		test\xunit.runner.json = test\xunit.runner.json
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jmw.DDD", "src\Jmw.DDD\Jmw.DDD.csproj", "{56FC1E79-1290-43F6-BE40-CC26EFD6DBC5}"
 EndProject
@@ -13,19 +17,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jmw.DDD.UnitTest", "test\Jm
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4FE0F682-D715-4386-8090-69E788B7B9AF}"
 	ProjectSection(SolutionItems) = preProject
+		Directory.build.targets = Directory.build.targets
 		readme.md = readme.md
 		stylecop.json = stylecop.json
 		stylecop.ruleset = stylecop.ruleset
-		xunit.runner.json = xunit.runner.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jmw.DDD.EntityFrameworkCore", "src\Jmw.DDD.Repositories.EntityFrameworkCore\Jmw.DDD.EntityFrameworkCore.csproj", "{2563AAA9-D819-4140-9780-15951194D11E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jmw.DDD.Repositories.EntityFrameworkCore.UnitTest", "test\Jmw.DDD.Repositories.EntityFrameworkCore.UnitTest\Jmw.DDD.Repositories.EntityFrameworkCore.UnitTest.csproj", "{AA0AB226-ACFE-4E68-B1DD-6FF1341795F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jmw.DDD.MediatR", "src\Jmw.DDD.MediatR\Jmw.DDD.MediatR.csproj", "{FBA08227-14FA-4FE1-A2E7-92F3F7272C97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jmw.DDD.MediatR", "src\Jmw.DDD.MediatR\Jmw.DDD.MediatR.csproj", "{FBA08227-14FA-4FE1-A2E7-92F3F7272C97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jmw.DDD.MediatR.UnitTest", "test\Jmw.DDD.MediatR.UnitTest\Jmw.DDD.MediatR.UnitTest.csproj", "{862F1BA3-8B87-4724-BB57-0EEBC7E62DD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jmw.DDD.MediatR.UnitTest", "test\Jmw.DDD.MediatR.UnitTest\Jmw.DDD.MediatR.UnitTest.csproj", "{862F1BA3-8B87-4724-BB57-0EEBC7E62DD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
