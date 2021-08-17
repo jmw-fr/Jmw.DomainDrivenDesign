@@ -15,7 +15,7 @@ namespace Jmw.DDD.MediatR.UnitTest.Queries.Handlers
     using Moq;
 
     /// <summary>
-    /// Fixtures for <see cref="ListHandlerUnitTest"/>
+    /// Fixtures for <see cref="ListHandlerUnitTest"/>.
     /// </summary>
     public class ListHandlerFixtures
     {
@@ -177,7 +177,7 @@ namespace Jmw.DDD.MediatR.UnitTest.Queries.Handlers
         public Mock<IMapper> Mapper { get; }
 
         /// <summary>
-        /// Mock for <see cref="ListHandler{TReturn, TKey, TRepository, TEntity}"/>
+        /// Mock for <see cref="ListHandler{TReturn, TKey, TRepository, TEntity}"/>.
         /// </summary>
         public class ListHandlerMock : ListHandler<string, Guid, IReadOnlyRepository<string, Guid>, string>
         {

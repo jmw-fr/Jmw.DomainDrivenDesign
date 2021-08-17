@@ -47,7 +47,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
                 {
                     string sql = $"LOCK TABLE \"{Configuration.Schema}\".\"{Configuration.TableName}\" IN ACCESS EXCLUSIVE MODE;";
 
-                    await Configuration.Context.Database.ExecuteSqlCommandAsync(sql);
+                    await Configuration.Context.Database.ExecuteSqlRawAsync(sql);
                 }
                 else
                 {

@@ -15,7 +15,7 @@ namespace Jmw.DDD.Queries.Handlers
     using NLog;
 
     /// <summary>
-    /// MediatR handler for <see cref="FindQuery{TReturn, TKey}"/>
+    /// MediatR handler for <see cref="FindQuery{TReturn, TKey}"/>.
     /// </summary>
     /// <typeparam name="TReturn">Returned element type.</typeparam>
     /// <typeparam name="TKey">Element id type.</typeparam>
@@ -37,7 +37,7 @@ namespace Jmw.DDD.Queries.Handlers
         /// </summary>
         /// <param name="repository">Instance of the repository.</param>
         /// <param name="mapper">AutoMapper instance. The instance must be configured
-        /// to map from <typeparamref name="TEntity"/> to <typeparamref name="TReturn"/>
+        /// to map from <typeparamref name="TEntity"/> to <typeparamref name="TReturn"/>.
         /// </param>
         /// <exception cref="ArgumentNullException">One of the parameter is <c>null</c>.</exception>
         public FindHandler(TRepository repository, IMapper mapper)

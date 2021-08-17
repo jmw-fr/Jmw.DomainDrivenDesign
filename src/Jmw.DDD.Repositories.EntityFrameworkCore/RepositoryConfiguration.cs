@@ -19,9 +19,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         where TContext : DbContext
         where TData : class
     {
-        private IList<string> internalOrderBy;
+        private readonly IList<string> internalIncludes;
 
-        private IList<string> internalIncludes;
+        private IList<string> internalOrderBy;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryConfiguration{TContext, TData}"/> class.
@@ -45,9 +45,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
             internalIncludes = new List<string>();
             internalOrderBy = new List<string>();
 
-            IRelationalEntityTypeAnnotations mapping = context.Model.FindEntityType(typeof(TData).FullName).Relational();
-            Schema = mapping.Schema;
-            TableName = mapping.TableName;
+            var t = context.Model.FindEntityType(typeof(TData).FullName);
+            Schema = t.GetSchema();
+            TableName = t.GetTableName();
         }
 
         /// <summary>
@@ -129,9 +129,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
 
         private static string GetPropertyName<TPropertyType>(Expression<Func<TData, TPropertyType>> propertyLambda)
         {
-            MemberExpression memberExpression = propertyLambda.Body as MemberExpression;
-
-            if (memberExpression == null)
+            if (!(propertyLambda.Body is MemberExpression memberExpression))
             {
                 throw new ArgumentException(string.Format(
                     "Expression '{0}' refers to a method, not a property.",

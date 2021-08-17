@@ -171,9 +171,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         }
 
         /// <summary>
-        /// From https://stackoverflow.com/questions/31955025/generate-ef-orderby-expression-by-string :)
+        /// From https://stackoverflow.com/questions/31955025/generate-ef-orderby-expression-by-string.
         /// </summary>
-        /// <typeparam name="TSource">Source type</typeparam>
+        /// <typeparam name="TSource">Source type.</typeparam>
         /// <param name="query">Source query.</param>
         /// <param name="methodName">Order by method to use.</param>
         /// <param name="propertyName">Property name.</param>

@@ -13,7 +13,7 @@ namespace Jmw.DDD.MediatR.UnitTest.Queries.Handlers
     using Moq;
 
     /// <summary>
-    /// Fixtures for <see cref="FindHandlerUnitTest"/>
+    /// Fixtures for <see cref="FindHandlerUnitTest"/>.
     /// </summary>
     public class FindHandlerFixtures
     {
@@ -142,7 +142,7 @@ namespace Jmw.DDD.MediatR.UnitTest.Queries.Handlers
         public Mock<IMapper> Mapper { get; }
 
         /// <summary>
-        /// Mock for <see cref="FindQuery{TReturn, TKey}"/>
+        /// Mock for <see cref="FindQuery{TReturn, TKey}"/>.
         /// </summary>
         public class FindHandlerMock : FindHandler<string, Guid, IReadOnlyRepository<string, Guid>, string>
         {

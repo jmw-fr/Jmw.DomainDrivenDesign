@@ -22,14 +22,10 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="8.0.0" />
-    <PackageReference Include="GitVersionTask" Version="4.0.1-beta1-65">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Jmw.ComponentModel.DataAnnotations" Version="1.0.0" />
-    <PackageReference Include="MediatR" Version="6.0.0" />
-    <PackageReference Include="NLog" Version="4.5.11" />
+    <PackageReference Include="MediatR" Version="9.0.0" />
+    <PackageReference Include="NLog" Version="4.7.10" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
