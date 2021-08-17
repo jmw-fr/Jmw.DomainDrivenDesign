@@ -71,25 +71,23 @@ namespace Jmw.DDD.Domain.Repositories
         /// </param>
         /// <param name="skip">How many entity of the result to skip.</param>
         /// <param name="take">How many entity of the result to return.</param>
-        /// <param name="lastFirst">
-        /// Indicates how entities must be sorted before searching.
-        /// If <c>true</c> then entities are sorting ascending. Sorting is repository dependent.
-        /// </param>
+        /// <param name="sortOrder">Sort order applied to the data.</param>
         /// <returns>A task that represents the asynchronous query operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="predicate"/> is <c>null</c>.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="skip"/> or <paramref name="take"/> are lower than 0.</exception>
-        Task<IEnumerable<TData>> QueryAsync(Expression<Func<TData, bool>> predicate, long skip, long take, bool lastFirst);
+        Task<IEnumerable<TData>> QueryAsync(
+            Expression<Func<TData, bool>> predicate,
+            long skip,
+            long take,
+            SortOrder sortOrder = SortOrder.Ascending);
 
         /// <summary>
         /// Returns any entity in the repository.
         /// </summary>
         /// <param name="skip">How many entity of the result to skip.</param>
         /// <param name="take">How many entity of the result to return.</param>
-        /// <param name="lastFirst">
-        /// Indicates how entities must be sorted before searching.
-        /// If <c>true</c> then entities are sorting ascending. Sorting is repository dependent.
-        /// </param>
+        /// <param name="sortOrder">Sort order applied to the data.</param>
         /// <returns>A task that represents the asynchronous query operation.</returns>
-        Task<IEnumerable<TData>> AnyAsync(long skip, long take, bool lastFirst);
+        Task<IEnumerable<TData>> AnyAsync(long skip, long take, SortOrder sortOrder = SortOrder.Ascending);
     }
 }

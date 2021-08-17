@@ -5,23 +5,21 @@
 namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq.Expressions;
     using Jmw.DDD.Repositories.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
-    /// Fixture of <see cref="Repository{TContext, TData, TKey, TOrderBy}" />
+    /// Fixture of <see cref="Repository{TContext, TData, TKey}" />
     /// for unit testing.
     /// </summary>
     public class RepositoryFixture :
-        Repository<DbContextFixture, TestDataFixture, string, string>
+        Repository<DbContextFixture, TestDataFixture, string>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryFixture"/> class.
         /// </summary>
         public RepositoryFixture()
-            : base(new DbContextFixture(), p => p.TestData, o => o.Id, p => p.Collection, p => p.Reference)
+            : base(new DbContextFixture(), p => p.TestData)
         {
         }
 
@@ -30,15 +28,22 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common
         /// </summary>
         /// <param name="dbContext">DbContext to use.</param>
         /// <param name="propertySelector">Property selector.</param>
-        /// <param name="orderBySelector">order by property selector</param>
-        /// <param name="includes">Includes to add.</param>
         public RepositoryFixture(
             DbContextFixture dbContext,
-            Func<DbContextFixture, DbSet<TestDataFixture>> propertySelector,
-            Expression<Func<TestDataFixture, string>> orderBySelector,
-            params Expression<Func<TestDataFixture, object>>[] includes)
-            : base(dbContext, propertySelector, orderBySelector, includes)
+            Func<DbContextFixture, DbSet<TestDataFixture>> propertySelector)
+            : base(dbContext, propertySelector)
         {
+        }
+
+        /// <inheritdoc/>
+        protected override void OnConfigure(RepositoryConfiguration<DbContextFixture, TestDataFixture> configuration)
+        {
+            configuration
+                .OrderBy(m => m.Id);
+
+            configuration
+                .Include(m => m.Collection)
+                .Include(m => m.Reference);
         }
     }
 }

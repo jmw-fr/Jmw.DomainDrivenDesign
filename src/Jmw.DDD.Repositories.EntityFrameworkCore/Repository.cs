@@ -5,8 +5,6 @@
 namespace Jmw.DDD.Repositories.EntityFrameworkCore
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq.Expressions;
     using System.Threading.Tasks;
     using Jmw.ComponentModel.DataAnnotations;
     using Jmw.DDD.Domain.Repositories;
@@ -18,26 +16,21 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
     /// <typeparam name="TContext">Entity DbContext class.</typeparam>
     /// <typeparam name="TData">Repository entity data type.</typeparam>
     /// <typeparam name="TKey">Repository key type.</typeparam>
-    /// <typeparam name="TOrderBy">Order by property type.</typeparam>
-    public abstract class Repository<TContext, TData, TKey, TOrderBy> :
-        ReadOnlyRepository<TContext, TData, TKey, TOrderBy>,
+    public abstract class Repository<TContext, TData, TKey> :
+        ReadOnlyRepository<TContext, TData, TKey>,
         IRepository<TData, TKey>
         where TContext : DbContext
         where TData : class
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Repository{TContext, TData, TKey, TOrderBy}"/> class.
+        /// Initializes a new instance of the <see cref="Repository{TContext, TData, TKey}"/> class.
         /// </summary>
         /// <param name="context">EntityFramework context to use.</param>
         /// <param name="propertySelector">Selector of the DbSet property of <paramref name="context"/>.</param>
-        /// <param name="orderBySelector">Selector of <paramref name="propertySelector"/> property used to order by.</param>
-        /// <param name="includes">Referenced properties to include during selection of data.</param>
         public Repository(
             TContext context,
-            Func<TContext, DbSet<TData>> propertySelector,
-            Expression<Func<TData, TOrderBy>> orderBySelector = null,
-            params Expression<Func<TData, object>>[] includes)
-            : base(context, propertySelector, orderBySelector, includes)
+            Func<TContext, DbSet<TData>> propertySelector)
+            : base(context, propertySelector)
         {
         }
 
@@ -51,9 +44,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
 
             entity.ValidateModel();
 
-            DbSet.Add(entity);
+            Configuration.DbSet.Add(entity);
 
-            await Context.SaveChangesAsync();
+            await Configuration.Context.SaveChangesAsync();
         }
 
         /// <inheritdoc />
@@ -66,9 +59,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
 
             entity.ValidateModel();
 
-            DbSet.Update(entity);
+            Configuration.DbSet.Update(entity);
 
-            await Context.SaveChangesAsync();
+            await Configuration.Context.SaveChangesAsync();
         }
     }
 }

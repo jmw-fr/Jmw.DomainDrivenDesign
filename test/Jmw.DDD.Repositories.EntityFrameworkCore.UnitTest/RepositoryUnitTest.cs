@@ -5,15 +5,13 @@
 namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq.Expressions;
     using AutoFixture;
     using Jmw.DDD.Repositories.EntityFrameworkCore;
     using Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest.Common;
     using Xunit;
 
     /// <summary>
-    /// <see cref="Repository{TContext, TData, TKey, TOrderBy}"/> unit tests.
+    /// <see cref="Repository{TContext, TData, TKey}"/> unit tests.
     /// </summary>
     public class RepositoryUnitTest
     {
@@ -25,9 +23,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         public void Constructor_Must_ThrowExceptions()
         {
             // Arrange
-            Action sut1 = () => new RepositoryFixture(new DbContextFixture(), null, null, null);
-            Action sut2 = () => new RepositoryFixture(null, c => c.TestData, null, null);
-            Action sut3 = () => new RepositoryFixture(new DbContextFixture(), c => null, null, null);
+            Action sut1 = () => new RepositoryFixture(new DbContextFixture(), null);
+            Action sut2 = () => new RepositoryFixture(null, c => c.TestData);
+            Action sut3 = () => new RepositoryFixture(new DbContextFixture(), c => null);
 
             // Act
 
@@ -47,27 +45,17 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
             // Arrange
             var fixture = new Fixture();
             var dbContext = new DbContextFixture();
-            Expression<Func<TestDataFixture, string>> orderBySelector = o => o.Id;
 
             // Act
-            var sut = new RepositoryFixture(dbContext, c => c.TestData, orderBySelector, p => p.Collection, p => p.Reference);
-            var sut2 = new RepositoryFixture(dbContext, c => c.TestData, orderBySelector);
+            var sut = new RepositoryFixture(dbContext, c => c.TestData);
 
             // Assert
-            Assert.Equal(dbContext, sut.Context);
-            Assert.Equal(dbContext.TestData, sut.DbSet);
-            Assert.Equal(orderBySelector, sut.OrderBySelector);
-            Assert.Collection(
-                sut.Includes,
-                (s) => Assert.Equal(nameof(TestDataFixture.Collection), s),
-                (s) => Assert.Equal(nameof(TestDataFixture.Reference), s));
-
-            Assert.NotNull(sut2.Includes);
-            Assert.Empty(sut2.Includes);
+            Assert.Equal(dbContext, sut.Configuration.Context);
+            Assert.Equal(dbContext.TestData, sut.Configuration.DbSet);
         }
 
         /// <summary>
-        /// Checks that <see cref="Repository{TContext, TData, TKey, TOrderBy}.InsertAsync" />
+        /// Checks that <see cref="Repository{TContext, TData, TKey}.InsertAsync" />
         /// correctly checks the parameters.
         /// </summary>
         [Fact]
@@ -84,7 +72,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCoreUnitTest
         }
 
         /// <summary>
-        /// Checks that <see cref="Repository{TContext, TData, TKey, TOrderBy}.UpdateAsync" />
+        /// Checks that <see cref="Repository{TContext, TData, TKey}.UpdateAsync" />
         /// correctly checks the parameters.
         /// </summary>
         [Fact]

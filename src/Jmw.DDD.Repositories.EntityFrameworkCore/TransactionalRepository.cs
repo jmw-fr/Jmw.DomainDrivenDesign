@@ -5,8 +5,6 @@
 namespace Jmw.DDD.Repositories.EntityFrameworkCore
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq.Expressions;
     using System.Threading.Tasks;
     using Jmw.DDD.Domain.Repositories;
     using Microsoft.EntityFrameworkCore;
@@ -17,56 +15,53 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
     /// <typeparam name="TContext">Entity DbContext class.</typeparam>
     /// <typeparam name="TData">Repository entity data type.</typeparam>
     /// <typeparam name="TKey">Repository key type.</typeparam>
-    /// <typeparam name="TOrderBy">Order by property type.</typeparam>
-    public abstract class TransactionalRepository<TContext, TData, TKey, TOrderBy> :
-        Repository<TContext, TData, TKey, TOrderBy>,
+    public abstract class TransactionalRepository<TContext, TData, TKey> :
+        Repository<TContext, TData, TKey>,
         ITransactionalRepository<TData, TKey>
         where TContext : DbContext
         where TData : class
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TransactionalRepository{TContext, TData, TKey, TOrderBy}"/> class.
+        /// Initializes a new instance of the <see cref="TransactionalRepository{TContext, TData, TKey}"/> class.
         /// </summary>
         /// <param name="context">EntityFramework context to use.</param>
         /// <param name="propertySelector">Selector of the DbSet property of <paramref name="context"/>.</param>
-        /// <param name="orderBySelector">Selector of <paramref name="propertySelector"/> property used to order by.</param>
-        /// <param name="includes">Referenced properties to include during selection of data.</param>
         public TransactionalRepository(
             TContext context,
-            Func<TContext, DbSet<TData>> propertySelector,
-            Expression<Func<TData, TOrderBy>> orderBySelector = null,
-            params Expression<Func<TData, object>>[] includes)
-            : base(context, propertySelector, orderBySelector, includes)
+            Func<TContext, DbSet<TData>> propertySelector)
+            : base(context, propertySelector)
         {
         }
 
         /// <inheritdoc/>
         public async Task BeginTransactionAsync(bool exclusiveAccess = false)
         {
-            if (Context.Database.CurrentTransaction is null)
+            if (Configuration.Context.Database.CurrentTransaction is null)
             {
-                await Context.Database.BeginTransactionAsync();
+                await Configuration.Context.Database.BeginTransactionAsync();
             }
 
             if (exclusiveAccess)
             {
-                if (this.Context.Database.ProviderName == "Npgsql.EntityFrameworkCore.PostgreSQL")
+                if (Configuration.Context.Database.ProviderName == "Npgsql.EntityFrameworkCore.PostgreSQL")
                 {
-                    string sql = $"LOCK TABLE \"{Schema}\".\"{TableName}\" IN ACCESS EXCLUSIVE MODE;";
+                    string sql = $"LOCK TABLE \"{Configuration.Schema}\".\"{Configuration.TableName}\" IN ACCESS EXCLUSIVE MODE;";
 
-                    await Context.Database.ExecuteSqlCommandAsync(sql);
+                    await Configuration.Context.Database.ExecuteSqlRawAsync(sql);
                 }
-
-                throw new InvalidOperationException("Exclusive lock is not implemented with this driver.");
+                else
+                {
+                    throw new InvalidOperationException("Exclusive lock is not implemented with this driver.");
+                }
             }
         }
 
         /// <inheritdoc/>
         public async Task CommitTransactionAsync()
         {
-            if (Context.Database.CurrentTransaction != null)
+            if (Configuration.Context.Database.CurrentTransaction != null)
             {
-                Context.Database.CommitTransaction();
+                Configuration.Context.Database.CommitTransaction();
             }
 
             await Task.CompletedTask;
@@ -75,9 +70,9 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         /// <inheritdoc/>
         public async Task RollbackTransactionAsync()
         {
-            if (Context.Database.CurrentTransaction != null)
+            if (Configuration.Context.Database.CurrentTransaction != null)
             {
-                Context.Database.RollbackTransaction();
+                Configuration.Context.Database.RollbackTransaction();
             }
 
             await Task.CompletedTask;
@@ -86,7 +81,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         /// <inheritdoc/>
         public bool TransactionInProgress()
         {
-            return Context.Database.CurrentTransaction != null;
+            return Configuration.Context.Database.CurrentTransaction != null;
         }
     }
 }

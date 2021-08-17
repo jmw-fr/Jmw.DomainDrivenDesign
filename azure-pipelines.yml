@@ -7,18 +7,16 @@ trigger:
 - master
 
 pool:
-  vmImage: 'Ubuntu-16.04'
+  vmImage: 'vs2017-win2016'
 
 variables:
   buildConfiguration: 'Release'
 
 steps:
 - task: NuGetToolInstaller@0
-  displayName: 'Use NuGet 4.8.1'
-  inputs:
-    versionSpec: 4.8.1
+  displayName: 'Use NuGet'
 
-- task: gittools.gitversion.gitversion-task.GitVersion@3
+- task: gittools.gitversion.gitversion-task.GitVersion@4
   displayName: 'GitVersion'
   inputs:
     updateAssemblyInfo: false
