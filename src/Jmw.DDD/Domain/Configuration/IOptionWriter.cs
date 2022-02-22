@@ -23,5 +23,11 @@ namespace Jmw.DDD.Domain.Configuration
         /// <returns>A task that represents the asynchronous operation.</returns>
         Task WriteOptionAsync<TOption, TValue>(Expression<Func<TOption, TValue>> propertySelector, TValue newValue)
             where TOption : class, IOptionSetting;
+
+        /// <summary>
+        /// Removes all saved options.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        Task ResetAsync();
     }
 }

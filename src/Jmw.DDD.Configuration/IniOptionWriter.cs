@@ -28,6 +28,12 @@ namespace Jmw.DDD.Configuration
         }
 
         /// <inheritdoc/>
+        public async Task ResetAsync()
+        {
+            await File.Create(iniCompleteFileName).DisposeAsync();
+        }
+
+        /// <inheritdoc/>
         public Task WriteOptionAsync<TOption, TValue>(Expression<Func<TOption, TValue>> propertySelector, TValue newValue)
             where TOption : class, IOptionSetting
         {
