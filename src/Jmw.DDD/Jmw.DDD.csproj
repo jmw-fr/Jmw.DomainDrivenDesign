@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <CodeAnalysisRuleSet>..\..\stylecop.ruleset</CodeAnalysisRuleSet>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/jmw-fr/Jmw.DomainDrivenDesign</PackageProjectUrl>
@@ -9,6 +9,7 @@
     <Company>Jean-Marc Weeger</Company>
     <Authors>Jean-Marc Weeger</Authors>
     <Description>This library creates some abstractions (mainly interfaces) for Domain Driven Development, avoiding code duplications.</Description>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

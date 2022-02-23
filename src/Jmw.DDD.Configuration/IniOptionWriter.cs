@@ -34,20 +34,16 @@ namespace Jmw.DDD.Configuration
         }
 
         /// <inheritdoc/>
-        public Task WriteOptionAsync<TOption, TValue>(Expression<Func<TOption, TValue>> propertySelector, TValue newValue)
-            where TOption : class, IOptionSetting
+        public Task WriteOptionAsync<TOption, TValue>(
+            Expression<Func<TOption, TValue>> propertySelector,
+            string sectionName,
+            TValue newValue)
+            where TOption : class
         {
             Guard.Argument(propertySelector.Body.NodeType, nameof(propertySelector)).Equal(ExpressionType.MemberAccess);
+            Guard.Argument(sectionName, nameof(sectionName)).NotNull().NotEmpty();
 
             string propertyName = ((MemberExpression)propertySelector.Body).Member.Name;
-
-            var p = typeof(TOption)
-                .GetField(
-                    nameof(IOptionSetting.SectionName),
-                    BindingFlags.Static | BindingFlags.Public)
-                ?? throw new NullReferenceException();
-
-            var section = p.GetValue(null) as string ?? string.Empty;
 
             var f = new PeanutButter.INI.INIFile(this.iniCompleteFileName);
 
@@ -56,7 +52,7 @@ namespace Jmw.DDD.Configuration
                 f.Reload();
             }
 
-            f.SetValue(section, propertyName, newValue?.ToString());
+            f.SetValue(sectionName, propertyName, newValue?.ToString());
 
             f.Persist();
 
