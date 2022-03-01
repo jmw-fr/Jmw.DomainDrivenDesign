@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <CodeAnalysisRuleSet>..\..\stylecop.ruleset</CodeAnalysisRuleSet>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Jmw.DDD.Repositories.EntityFrameworkCore</PackageId>
@@ -32,9 +32,9 @@
   
   <ItemGroup>
     <PackageReference Include="Jmw.ComponentModel.DataAnnotations" Version="1.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.9" />
-    <PackageReference Include="NLog" Version="4.7.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.2" />
+    <PackageReference Include="NLog" Version="4.7.14" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -43,6 +43,10 @@
   
   <ItemGroup>
     <ProjectReference Include="..\Jmw.DDD\Jmw.DDD.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Update="GitVersion.MsBuild" Version="5.8.2" />
   </ItemGroup>
 
 </Project>

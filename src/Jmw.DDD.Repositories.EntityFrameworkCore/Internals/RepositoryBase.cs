@@ -30,6 +30,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         protected static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
 
         private readonly RepositoryConfiguration<TContext, TData> configuration;
+        private readonly object lockObj = new ();
 
         private bool configured;
 
@@ -52,7 +53,7 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         {
             get
             {
-                lock (this)
+                lock (lockObj)
                 {
                     if (!configured)
                     {
