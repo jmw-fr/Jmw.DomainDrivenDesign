@@ -63,5 +63,20 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
 
             await Configuration.Context.SaveChangesAsync();
         }
+
+        /// <inheritdoc />
+        public async Task DeleteAsync(TData entity)
+        {
+            if (entity is null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            entity.ValidateModel();
+
+            Configuration.DbSet.Remove(entity);
+
+            await Configuration.Context.SaveChangesAsync();
+        }
     }
 }

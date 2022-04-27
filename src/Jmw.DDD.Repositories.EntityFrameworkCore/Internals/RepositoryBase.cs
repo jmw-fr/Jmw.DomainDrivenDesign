@@ -104,6 +104,18 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
         }
 
         /// <summary>
+        /// Implementation of <see cref="IReadOnlyRepository{TData, TKey}.FirstOrDefaultAsync"/>.
+        /// </summary>
+        /// <param name="predicate">Optional predicate function.</param>
+        /// <returns>Found data or <c>null</c>.</returns>
+        public async Task<TData> FirstOrDefaultAsync(Expression<Func<TData, bool>> predicate = null)
+        {
+            Logger.Debug("RepositoryBase::FirstAsync");
+
+            return await PrepareQuery(predicate, 0, 1, SortOrder.Ascending).FirstOrDefaultAsync();
+        }
+
+        /// <summary>
         /// Implementation of <see cref="IReadOnlyRepository{TData, TKey}.LastAsync"/>.
         /// </summary>
         /// <param name="predicate">Optional predicate function.</param>
@@ -113,6 +125,18 @@ namespace Jmw.DDD.Repositories.EntityFrameworkCore
             Logger.Debug("RepositoryBase::LastAsync");
 
             return await PrepareQuery(predicate, 0, 1, SortOrder.Descending).FirstOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// Implementation of <see cref="IReadOnlyRepository{TData, TKey}.LastAsync"/>.
+        /// </summary>
+        /// <param name="predicate">Optional predicate function.</param>
+        /// <returns>Found data or <c>null</c>.</returns>
+        public async Task<TData> LastOrDefaultAsync(Expression<Func<TData, bool>> predicate = null)
+        {
+            Logger.Debug("RepositoryBase::LastOrDefaultAsync");
+
+            return await PrepareQuery(predicate, 0, 1, SortOrder.Descending).LastOrDefaultAsync();
         }
 
         /// <summary>

@@ -47,9 +47,21 @@ namespace Jmw.DDD.Domain.Repositories
         /// If <c>null</c> then the first entity of all the repository is searched.
         /// </param>
         /// <returns>
-        /// A task that represents the asynchronous find operation. The task result contains the entity found, or null.
+        /// A task that represents the asynchronous find operation. The task result contains the entity found.
         /// </returns>
         Task<TData> FirstAsync(Expression<Func<TData, bool>> predicate);
+
+        /// <summary>
+        /// Returns the first entity found in the repository or Default if not found.
+        /// </summary>
+        /// <param name="predicate">
+        /// Predicate function used to search the entities.
+        /// If <c>null</c> then the first entity of all the repository is searched.
+        /// </param>
+        /// <returns>
+        /// A task that represents the asynchronous find operation. The task result contains the entity found, or default.
+        /// </returns>
+        Task<TData> FirstOrDefaultAsync(Expression<Func<TData, bool>> predicate);
 
         /// <summary>
         /// Returns the last entity found in the repository.
@@ -59,9 +71,21 @@ namespace Jmw.DDD.Domain.Repositories
         /// If <c>null</c> then the last entity of all the repository is searched.
         /// </param>
         /// <returns>
-        /// A task that represents the asynchronous find operation. The task result contains the entity found, or null.
+        /// A task that represents the asynchronous find operation. The task result contains the entity found.
         /// </returns>
         Task<TData> LastAsync(Expression<Func<TData, bool>> predicate);
+
+        /// <summary>
+        /// Returns the last entity found in the repository or Default if not found.
+        /// </summary>
+        /// <param name="predicate">
+        /// Predicate function used to search the entities.
+        /// If <c>null</c> then the last entity of all the repository is searched.
+        /// </param>
+        /// <returns>
+        /// A task that represents the asynchronous find operation. The task result contains the entity found, or default.
+        /// </returns>
+        Task<TData> LastOrDefaultAsync(Expression<Func<TData, bool>> predicate);
 
         /// <summary>
         /// Search for entities in the repository.

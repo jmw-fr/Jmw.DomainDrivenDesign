@@ -27,9 +27,17 @@ namespace Jmw.DDD.Domain.Repositories
         /// <summary>
         /// Updates an existing element to the repository.
         /// </summary>
-        /// <param name="entity">Etity to update.</param>
+        /// <param name="entity">Entity to update.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="entity"/> is <c>null</c>.</exception>
         Task UpdateAsync(TData entity);
+
+        /// <summary>
+        /// Deletes an existing element to the repository.
+        /// </summary>
+        /// <param name="entity">Entity to delete.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="entity"/> is <c>null</c>.</exception>
+        Task DeleteAsync(TData entity);
     }
 }
